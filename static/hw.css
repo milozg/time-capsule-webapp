@@ -1,0 +1,15 @@
+body {
+    background-color: #fff;
+    color: slategray;
+    font-family: arial;
+}
+
+h1 {
+    font-weight: normal;
+    background: aliceblue;
+    margin: 0;
+}
+
+footer {
+    background : aliceblue;
+}
