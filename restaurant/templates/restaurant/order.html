@@ -1,0 +1,60 @@
+<!-- restaurant/templates/restaurant/order.html -->
+
+{% extends 'restaurant/base.html' %}
+
+{% block content %}
+    <h1>Place an Order</h1>
+
+    <form action="{% url 'confirmation' %}" method="post">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td>
+                    <h2>Select your items:</h2>
+                    <input type="checkbox" id="item1" name="item" value="Lobster $90">
+                        <label for="item1">Lobster $90</label>
+                    <input type="checkbox" id="butter" name="item" value="Extra Butter $40">
+                        <label for="item1">Do you want butter for an extra $40?</label><br>
+                    <input type="checkbox" id="item2" name="item" value="Big Lobster $140">
+                        <label for="item2">Big Lobster $140</label><br>
+                    <input type="checkbox" id="item3" name="item" value="MEGA Lobster $299">
+                        <label for="item3">MEGA Lobster $299</label><br>
+                    <input type="checkbox" id="item4" name="item" value="Bread $1">
+                        <label for="item4">Bread $1</label><br>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <h2>Do you want today's special?:</h2>
+                    <input type="checkbox" id="special" name="special" value="{{special}}">
+                        <label for="special">{{ special }}</label><br>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <h2>Special instructions:</h2>
+                    <p>Please let us know any special instructions:</p>
+                    <textarea name="instructions" rows="10" cols="80"></textarea>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <h2>Customer Information</h2>
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="Name"><br>
+                    <label for="phone">Phone:</label>
+                    <input type="text" id="phone" name="Phone"><br>
+                    <label for="email">Email:</label>
+                    <input type="text" id="email" name="Email">
+                </td>
+            </tr>
+        </table>
+
+        <div>
+            <input type="submit" id="submitButton">
+        </div>
+    </form> 
+{% endblock %}

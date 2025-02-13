@@ -1,0 +1,92 @@
+
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+img {
+    height : 60vh;
+    width : 75vw;
+}
+
+header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+body {
+    background-color: #7ebdc2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: auto 10vw;
+}
+
+h1 {
+    color : #bb4430;
+    margin : 2vh;
+    font-family: "League Gothic", sans-serif;
+    font-weight: 400;
+    font-size: calc(6vh + 3px);
+}
+
+p {
+    color : #231f20;
+    font-family: "PT Serif", serif;
+    font-weight: 400;
+    font-size: x-large;
+    margin : 2vh;
+}
+
+td {
+    font-family: "PT Serif", serif;
+    font-weight: 400;
+    font-size: x-large;
+}
+
+tr {
+    text-align: center;
+}
+
+td {
+    padding : 2vh
+}
+
+nav {
+    background-color: #bb4430;
+    width : 100%;
+    margin-top: 2vh;
+    text-align: center;
+    color : #231f20;
+    font-family: "PT Serif", serif;
+    font-weight: 400;
+    font-size: xx-large;
+}
+
+li {
+    padding: 2vw;
+}
+
+nav * {
+    display: inline;
+}
+
+#submitButton {
+    background-color: #bb4430;
+    color: #231f20;
+    height: 50px;
+    width: 100px;
+    font-family: "PT Serif", serif;
+    font-weight: 400;
+    font-size: large;
+    margin-top: 2vh;
+}
+
+div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
