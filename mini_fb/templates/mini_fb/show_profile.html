@@ -1,0 +1,26 @@
+<!-- mini_fb/templates/mini_fb/show_profile.html -->
+{% extends 'mini_fb/base.html' %}
+
+
+{% block content %}
+<main>
+
+    {% if profile.last_name %}
+        <h1>{{profile.first_name}} {{profile.last_name}}</h1>
+    {% else %}
+        <h1>{{profile.first_name}}</h1>
+    {% endif %}
+
+    <div>
+		<img src="{{profile.image_url}}" alt="">
+        
+        <div>
+            <h2>From {{profile.city}}</h2>
+            <p>
+                Email: {{profile.email}}
+            </p>
+        </div>
+    </div>
+
+</main>
+{% endblock %}

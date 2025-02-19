@@ -14,10 +14,22 @@
             </tr>
             {% for p in profiles %}
                 <tr>
-                    <td>{{p.first_name}}</td>
-                    <td>{{p.last_name}}</td>
+                    <td>
+                        <a href="{% url 'show_profile' p.pk%}">
+                            {{p.first_name}}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{% url 'show_profile' p.pk%}">
+                            {{p.last_name}}
+                        </a>
+                    </td>
                     <td>{{p.city}}</td>
-                    <td><img src="{{p.image_url}}" alt=""></td>
+                    <td>
+                        <a href="{% url 'show_profile' p.pk%}">
+                            <img src="{{p.image_url}}" alt="">
+                        </a>
+                    </td>
                 </tr>
             {% endfor %}
         </table>
