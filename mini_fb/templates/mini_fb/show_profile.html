@@ -20,6 +20,13 @@
                 Email: {{profile.email}}
             </p>
         </div>
+        <div>
+            <h1>Status Messages:</h1>
+            {% for msg in profile.get_all_status_messages %}
+                <h2>{{msg.text}}</h2>
+                <p>at {{msg.published}}</p>
+            {% endfor %}
+        </div>
     </div>
 
 </main>

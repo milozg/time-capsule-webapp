@@ -15,3 +15,18 @@ class Profile(models.Model):
     def __str__(self):
         '''Define a string representaion of this model instance'''
         return f'{self.first_name} {self.last_name}'
+    
+    def get_all_status_messages(self):
+        '''Return a Query set of all the status messages for this profile'''
+        return StatusMessage.objects.filter(profile=self)
+
+class StatusMessage(models.Model):
+    '''Encapsulate a status message for a specific profile.'''
+
+    published = models.DateTimeField(auto_now=True)
+    text = models.TextField(blank=False)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+
+    def __str__(self):
+        '''Define a string representaion of this model instance'''
+        return f'{self.text}'
