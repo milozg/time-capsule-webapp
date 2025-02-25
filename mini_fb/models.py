@@ -19,7 +19,8 @@ class Profile(models.Model):
     
     def get_all_status_messages(self):
         '''Return a Query set of all the status messages for this profile'''
-        return StatusMessage.objects.filter(profile=self)
+        msgs = StatusMessage.objects.filter(profile=self).order_by('-published')
+        return msgs
     
     def get_absolute_url(self):
         '''Return a URL to display one instance of this object'''

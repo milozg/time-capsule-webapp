@@ -24,3 +24,31 @@ class CreateProfileView(CreateView):
     '''A view to handle the creation of a new profile'''
     form_class = CreateProfileForm
     template_name = 'mini_fb/create_profile_form.html'
+
+class CreateStatusMessageView(CreateView):
+    '''A view to create a new status message and save it to the database.'''
+    form_class = CreateStatusMessageForm
+    template_name = "mini_fb/create_status_form.html"
+
+    def get_success_url(self):
+        '''Provide a URL to redirect to after creating a new status message'''
+        pk = self.kwargs['pk']
+        return reverse('show_profile', kwargs={'pk' : pk})
+    
+    def get_context_data(self):
+        '''Return the dictionary of context variables for use in the template'''
+        context = super().get_context_data()
+        pk = self.kwargs['pk']
+        profile = Profile.objects.get(pk=pk)
+        context['profile'] = profile
+        return context
+
+    
+    def form_valid(self, form):
+        '''Handle the form submission and save the new object to the Django database.'''
+
+        pk = self.kwargs['pk']
+        profile = Profile.objects.get(pk=pk)
+        form.instance.profile = profile
+
+        return super().form_valid(form)

@@ -121,9 +121,9 @@ table a:hover, nav ul li a:hover {
 .profile-container {
     width: 60%;
     margin: 30px auto;
-    background: fff8f0;
+    background: #fff8f0;
     padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     border-radius: 10px;
     text-align: center;
     display: flex;
@@ -146,6 +146,91 @@ table a:hover, nav ul li a:hover {
     height: auto;
     border-radius: 10px;
     object-fit: cover;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff8f0;
+    background-color: #92140c;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #7f120a;
+}
+
+/* Status message styles */
+.status-container {
+    width: 60%;
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #fff8f0;
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.status-container h1, .status-container h2, .status-container h3 {
+    margin: 10px 0;
+    text-align: center;
+}
+
+.status-container h2 {
+    color: #92140c;
+}
+
+.status-container p {
+    font-size: 16px;
+    color: #1e1e24;
+}
+
+/* Form styles */
+form {
+    width: 60%;
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #fff8f0;
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+form table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+form table td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+form input[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #92140c;
+    color: #fff8f0;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form input[type="submit"]:hover {
+    background-color: #7f120a;
 }
 
 /* Footer styles */
