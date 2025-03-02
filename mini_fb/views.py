@@ -51,4 +51,20 @@ class CreateStatusMessageView(CreateView):
         profile = Profile.objects.get(pk=pk)
         form.instance.profile = profile
 
+        # print(f'CreateSMView: form.cleaned_data={form.cleaned_data}')
+
+        sm = form.save()
+        files = self.request.FILES.getlist('files')
+        print(files)
+        for f in files:
+            new_img = Image()
+            new_img.image = f
+            new_img.profile = profile
+            new_img.save()
+
+            new_si = StatusImage()
+            new_si.image = new_img
+            new_si.status_message = sm
+            new_si.save()
+
         return super().form_valid(form)
