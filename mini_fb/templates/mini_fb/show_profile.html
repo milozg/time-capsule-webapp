@@ -24,11 +24,13 @@
     <div class="status-container">
         <h1>Status Messages:</h1>
         {% for msg in profile.get_all_status_messages %}
-            <h2>{{msg.text}}</h2>
-            <p>at {{msg.published}}</p>
-            {% for img in msg.get_images %}
-                <img src='{{img.image.url}}' alt='{{img.image.url}}'>
-            {% endfor %}
+            <div class="status-message">
+                <h2>{{msg.text}}</h2>
+                <p>at {{msg.published}}</p>
+                {% for img in msg.get_images %}
+                    <img src='{{img.image.url}}' alt='{{img.image.url}}'>
+                {% endfor %}
+            </div>
         {% endfor %}
         <h3>
             <a href="{% url 'create_status' profile.pk %}" class="btn">Create a new Status Message</a>
