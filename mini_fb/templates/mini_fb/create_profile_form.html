@@ -1,4 +1,6 @@
-<!-- mini_fb/create_profile_form.html  -->
+<!-- mini_fb/create_profile_form.html  
+    html template to display a form to create a new profile
+-->
 
 {% extends 'mini_fb/base.html' %}
 
@@ -9,6 +11,6 @@
         <table>
             {{form.as_table}}
         </table>
-        <input type="submit" name="submit", value="Submit">
+        <input type="submit" name="submit" value="Submit" class="btn">
     </form>
 {% endblock %}

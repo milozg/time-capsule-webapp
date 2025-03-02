@@ -224,7 +224,7 @@ form table td {
     border-bottom: 1px solid #ddd;
 }
 
-form input[type="submit"] {
+/* form input[type="submit"] {
     display: block;
     width: 100%;
     padding: 10px;
@@ -238,7 +238,7 @@ form input[type="submit"] {
 
 form input[type="submit"]:hover {
     background-color: #7f120a;
-}
+} */
 
 /* Footer styles */
 footer {

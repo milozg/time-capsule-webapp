@@ -19,6 +19,9 @@
             <p>
                 Email: {{profile.email}}
             </p>
+            <h3>
+                <a href="{% url 'update_profile' profile.pk %}" class="btn">Update Profile</a>
+            </h3>
         </div>
     </div>
     <div class="status-container">

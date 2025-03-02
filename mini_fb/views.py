@@ -1,7 +1,7 @@
 # mini_fb/views.py
 
 from django.shortcuts import render
-from django.views.generic import ListView,DetailView,CreateView
+from django.views.generic import ListView,DetailView,CreateView,UpdateView
 from .models import *
 from .forms import *
 
@@ -68,3 +68,9 @@ class CreateStatusMessageView(CreateView):
             new_si.save()
 
         return super().form_valid(form)
+    
+class UpdateProfileView(UpdateView):
+    '''View class to handle the update of a profile in the DB.'''
+    model = Profile
+    form_class = UpdateProfileForm
+    template_name = "mini_fb/update_profile_form.html"
