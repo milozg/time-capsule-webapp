@@ -1,9 +1,9 @@
 # blog/views.py
 
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, CreateView
-from .models import Article
-from .forms import CreateArticleForm, CreateCommentForm
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from .models import Article, Comment
+from .forms import CreateArticleForm, CreateCommentForm, UpdateArticleForm
 from django.urls import reverse
 import random
 
@@ -71,3 +71,23 @@ class CreateCommentView(CreateView):
         form.instance.article = article
 
         return super().form_valid(form)
+    
+class UpdateArticleView(UpdateView):
+    '''View class to handle the update of an Article on a PK'''
+    model = Article
+    form_class = UpdateArticleForm
+    template_name = "blog/update_article_form.html"
+
+class DeleteCommentView(DeleteView):
+    '''View class to delete a comment on an article'''
+    model = Comment
+    template_name = 'blog/delete_comment_form.html'
+
+    def get_success_url(self):
+        '''Return the URL to direct to after a successful delete.'''
+
+        pk = self.kwargs['pk']
+        comment = Comment.objects.get(pk=pk)
+        article = comment.article
+
+        return reverse('article', kwargs={'pk' : article.pk})
