@@ -40,6 +40,12 @@ class StatusMessage(models.Model):
     def get_images(self):
         '''Return a QuerySet of the images associated with this status message.'''
         return Image.objects.filter(statusimage__status_message=self)
+    
+    def get_absolute_url(self):
+        '''Return a URL to display the profile for this status message.'''
+
+
+        return reverse('show_profile', kwargs={'pk':self.profile.pk})
         
 class Image(models.Model):
     '''Encapsulate an Image posted to the Webapp.'''

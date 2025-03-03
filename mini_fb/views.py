@@ -1,7 +1,7 @@
 # mini_fb/views.py
 
 from django.shortcuts import render
-from django.views.generic import ListView,DetailView,CreateView,UpdateView
+from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
 from .models import *
 from .forms import *
 
@@ -74,3 +74,25 @@ class UpdateProfileView(UpdateView):
     model = Profile
     form_class = UpdateProfileForm
     template_name = "mini_fb/update_profile_form.html"
+
+class DeleteStatusMessageView(DeleteView):
+    '''View class to delete a status message on a profile'''
+    model = StatusMessage
+    template_name = 'mini_fb/delete_status_form.html'
+    context_object_name = 'status'
+
+    def get_success_url(self):
+        '''Return the URL to direct to after a successful delete.'''
+
+        pk = self.kwargs['pk']
+        sm = StatusMessage.objects.get(pk=pk)
+        profile = sm.profile
+
+        return reverse('show_profile', kwargs={'pk' : profile.pk})
+    
+class UpdateStatusMessageView(UpdateView):
+    '''View class to handle the update of a status message in the DB.'''
+    model = StatusMessage
+    form_class = UpdateStatusMessageForm
+    template_name = "mini_fb/update_status_form.html"
+    context_object_name = 'status'

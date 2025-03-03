@@ -150,45 +150,50 @@ table a:hover, nav ul li a:hover {
 
 /* Status message styles */
 .status-container {
-    max-width: 800px;
-    margin: 20px auto;
+    width: 80%;
+    margin: 0 auto;
     padding: 20px;
-    background: #fff8f0;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 12px;
-}
-
-.status-container h1 {
-    font-size: 24px;
-    color: #1e1e24;
-    border-bottom: 2px solid #f0f0f0;
-    padding-bottom: 10px;
-}
-
-.status-container h2 {
-    font-size: 20px;
-    color: #1e1e24;
-    margin-top: 15px;
-}
-
-.status-container p {
-    font-size: 16px;
-    color: #666;
-    margin-bottom: 15px;
 }
 
 .status-message {
-    display: flex;
-    align-items: flex-start;
-    gap: 20px;
+    padding: 20px;
     margin-bottom: 20px;
+    background-color: #fff8f0;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
 }
 
-.status-message img {
-    max-width: 50%;
+.status-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px; /* Adds some spacing between elements */
+}
+
+.message-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.message-img {
+    display: flex;
+    justify-content: center; /* Centers image horizontally */
+    align-items: center;     /* Centers image vertically */
+    flex: 1;                /* Allows the image section to grow and take up space */
+}
+
+.message-img img {
+    max-width: 100%;        /* Makes image responsive */
+    max-height: 200px;      /* Limits image height */
     height: auto;
-    border: 1px solid #f0f0f0;
-    border-radius: 8px;
+    border-radius: 5px;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .btn {
@@ -224,23 +229,33 @@ form table td {
     border-bottom: 1px solid #ddd;
 }
 
-/* form input[type="submit"] {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #92140c;
-    color: #fff8f0;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+/* Style for the file input container */
+.file-input-container {
+    margin-top: 20px;
+    position: relative;
 }
 
-form input[type="submit"]:hover {
-    background-color: #7f120a;
-} */
+/* Style the label */
+.file-upload-label {
+    display: inline-block;
+    background-color: #92140c;
+    color: #fff8f0;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+}
 
-/* Footer styles */
+/* Hide the default file input */
+.styled-file-input {
+    display: none;
+}
+
+/* Style when file input is selected */
+#file-upload:focus {
+    outline: none;
+}
+
 footer {
     text-align: center;
     padding: 10px;

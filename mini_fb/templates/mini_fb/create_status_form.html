@@ -9,7 +9,10 @@
         <table>
             {{form.as_table}}
         </table>
-        <input type="file" name = "files" multiple />
+        <div class="file-input-container">
+            <label for="file-upload" class="file-upload-label">Add a picture</label>
+            <input type="file" name="files" id="file-upload" multiple class="styled-file-input" />
+        </div>
         <input type="submit" name="submit" value="Submit" class="btn">
     </form>
 {% endblock %}
