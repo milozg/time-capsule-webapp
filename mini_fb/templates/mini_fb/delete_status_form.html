@@ -13,7 +13,6 @@
     </form>
 
     <form action="{% url 'show_profile' status.profile.pk %}" method="GET">
-        {% csrf_token %}
         <input type="submit" value="Cancel" class="btn">
     </form>
 {% endblock %}
