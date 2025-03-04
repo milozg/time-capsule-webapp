@@ -55,7 +55,7 @@ class CreateStatusMessageView(CreateView):
 
         sm = form.save()
         files = self.request.FILES.getlist('files')
-        print(files)
+        # print(files)
         for f in files:
             new_img = Image()
             new_img.image = f

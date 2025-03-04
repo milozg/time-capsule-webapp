@@ -229,14 +229,8 @@ form table td {
     border-bottom: 1px solid #ddd;
 }
 
-/* Style for the file input container */
-.file-input-container {
-    margin-top: 20px;
-    position: relative;
-}
-
-/* Style the label */
-.file-upload-label {
+/* Style the file input directly */
+.styled-file-input {
     display: inline-block;
     background-color: #92140c;
     color: #fff8f0;
@@ -244,17 +238,26 @@ form table td {
     cursor: pointer;
     border-radius: 5px;
     font-weight: bold;
+    border: none;
 }
 
-/* Hide the default file input */
-.styled-file-input {
-    display: none;
+/* Style the file input button */
+.styled-file-input::file-selector-button {
+    background-color: #92140c;
+    color: #fff8f0;
+    padding: 8px 16px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
 }
 
-/* Style when file input is selected */
-#file-upload:focus {
-    outline: none;
+/* Style on hover */
+.styled-file-input::file-selector-button:hover {
+    background-color: #b81e14;
 }
+
 
 footer {
     text-align: center;
