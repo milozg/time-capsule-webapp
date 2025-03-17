@@ -25,7 +25,7 @@
         </div>
     </div>
     <div class="status-container">
-        <h1>Status Messages:</h1>
+        <h1>Status Messages</h1>
         {% for msg in profile.get_all_status_messages %}
         <div class="status-message">
             <div class="status-content">
@@ -48,6 +48,18 @@
         <h3>
             <a href="{% url 'create_status' profile.pk %}" class="btn">Create a new Status Message</a>
         </h3>
+    </div>
+
+    <h1>{{profile.first_name}}'s Friends</h1>
+    <div class="friends-container">
+        {% for p in profile.get_friends %}
+            <a href="{% url 'show_profile' p.pk%}">
+                <div class="friend">
+                        <img src="{{p.image_url}}" alt="" class="profile-img">
+                    <h2>{{p.first_name}}</h2>
+                </div>
+            </a>
+        {% endfor %}
     </div>
 
 </main>

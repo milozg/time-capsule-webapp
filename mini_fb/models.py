@@ -25,6 +25,30 @@ class Profile(models.Model):
     def get_absolute_url(self):
         '''Return a URL to display one instance of this object'''
         return reverse('show_profile', kwargs={'pk':self.pk})
+    
+    def get_friends(self):
+        '''Return a list of all the profiles that this profile is friends with.'''
+        friend_relations = Friend.objects.all()
+        friends = []
+
+        for rel in friend_relations:
+            if rel.profile1 == self:
+                friends.append(rel.profile2)
+            elif rel.profile2 == self:
+                friends.append(rel.profile1)
+        
+        return friends
+        
+    
+class Friend(models.Model):
+    '''Encapsulate a friendship between two profiles in the Database.'''
+    profile1 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="profile2")
+    profile2 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="profile1")
+    timestamp = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.profile1.first_name} & {self.profile2.first_name}'
+
 
 class StatusMessage(models.Model):
     '''Encapsulate a status message for a specific profile.'''
