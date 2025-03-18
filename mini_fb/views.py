@@ -1,9 +1,10 @@
 # mini_fb/views.py
 
 from django.shortcuts import render
-from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
+from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView,View
 from .models import *
 from .forms import *
+from django.shortcuts import redirect
 
 # Create your views here.
 class ShowAllProfilesView(ListView):
@@ -96,3 +97,23 @@ class UpdateStatusMessageView(UpdateView):
     form_class = UpdateStatusMessageForm
     template_name = "mini_fb/update_status_form.html"
     context_object_name = 'status'
+
+class CreateFriendView(View):
+    '''View class to handle the creation of a new friend relationship between two profiles.'''
+    model = Profile
+
+    def dispatch(self, request, *args, **kwargs):
+        '''Call the profile1 add friend method.'''
+
+        profile1 = Profile.objects.get(pk=kwargs['pk'])
+        profile2 = Profile.objects.get(pk=kwargs['other_pk'])
+        profile1.add_friend(profile2)
+
+        return redirect(reverse('show_profile', kwargs={'pk' : profile1.pk}))
+
+class ShowFriendSuggestionsView(DetailView):
+    '''Display the friend suggestions for a profile'''
+
+    model = Profile
+    template_name = 'mini_fb/friend_suggestions.html'
+    context_object_name = 'profile'

@@ -39,6 +39,28 @@ class Profile(models.Model):
         
         return friends
         
+    def add_friend(self, other):
+        '''Add a friend relationship for this profile and the one refered to in other, if it is valid.'''
+        if other == self:
+            return
+        if other in self.get_friends():
+            return
+        
+        new_friend = Friend()
+        new_friend.profile1 = self
+        new_friend.profile2 = other
+        new_friend.save()
+        return
+    
+    def get_friend_suggestions(self):
+        '''Return a Queryset of friend suggestions for this profile'''
+
+        profiles_to_exclude = list(map(lambda p: p.pk, self.get_friends()))
+        profiles_to_exclude.append(self.pk)
+
+        suggestions = Profile.objects.exclude(pk__in=profiles_to_exclude)
+        return suggestions
+
     
 class Friend(models.Model):
     '''Encapsulate a friendship between two profiles in the Database.'''
