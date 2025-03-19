@@ -60,7 +60,15 @@ class Profile(models.Model):
 
         suggestions = Profile.objects.exclude(pk__in=profiles_to_exclude)
         return suggestions
+    
+    def get_news_feed(self):
+        '''Get all status messages for this profile and this profile's friends.'''
+        profiles = self.get_friends()
+        profiles.append(self)
 
+        feed = StatusMessage.objects.filter(profile__in=profiles).order_by('-published')
+
+        return feed
     
 class Friend(models.Model):
     '''Encapsulate a friendship between two profiles in the Database.'''

@@ -112,8 +112,14 @@ class CreateFriendView(View):
         return redirect(reverse('show_profile', kwargs={'pk' : profile1.pk}))
 
 class ShowFriendSuggestionsView(DetailView):
-    '''Display the friend suggestions for a profile'''
+    '''View class to handle the request to display the friend suggestions for a profile'''
 
     model = Profile
     template_name = 'mini_fb/friend_suggestions.html'
+    context_object_name = 'profile'
+
+class ShowNewsFeedView(DetailView):
+    '''View class to handle the request to see the news feed of a profile'''
+    model = Profile
+    template_name = 'mini_fb/news_feed.html'
     context_object_name = 'profile'

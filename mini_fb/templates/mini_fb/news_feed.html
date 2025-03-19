@@ -1,0 +1,29 @@
+<!-- mini_fb/update_profile_form.html  
+    html template to display the news feed for a given profile.
+-->
+
+{% extends 'mini_fb/base.html' %}
+
+{% block content %}
+    <div class="status-container">
+        <h1>News Feed</h1>
+        <a href="{% url 'show_profile' profile.pk%}" class="btn"> Back to Profile</a><br>
+        {% for msg in profile.get_news_feed %}
+            <div class="status-message">
+                <div class="status-content">
+                    <div class="message-details">
+                        <h2>{{ msg.text }}</h2>
+                        <p>at {{ msg.published }}</p>
+                        <p>by {{msg.profile.first_name}}</p>
+                        <img src="{{msg.profile.image_url}}" alt="" class="profile-img">
+                    </div>
+                    <div class="message-img">
+                        {% for img in msg.get_images %}
+                            <img src="{{ img.image.url }}" alt="{{ img.image.url }}">
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
