@@ -190,6 +190,10 @@ table a:hover, nav ul li a:hover {
     border-radius: 5px;
 }
 
+.message-name-photo {
+    display: inline-flex;
+}
+
 /* Friends styles */
 .friends-container {
     width: 80%;
