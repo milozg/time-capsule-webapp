@@ -5,8 +5,17 @@ from django.views.generic import ListView,DetailView,CreateView,UpdateView,Delet
 from .models import *
 from .forms import *
 from django.shortcuts import redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse
 
 # Create your views here.
+
+class MyLoginRequiredMixin(LoginRequiredMixin):
+    '''Change the get_login_url of the default LoginRequiredMixin'''
+    def get_login_url(self):
+        '''return the login url'''
+        return reverse('login')
+
 class ShowAllProfilesView(ListView):
     '''Define a view class to show all Profiles'''
 
@@ -26,7 +35,7 @@ class CreateProfileView(CreateView):
     form_class = CreateProfileForm
     template_name = 'mini_fb/create_profile_form.html'
 
-class CreateStatusMessageView(CreateView):
+class CreateStatusMessageView(MyLoginRequiredMixin, CreateView):
     '''A view to create a new status message and save it to the database.'''
     form_class = CreateStatusMessageForm
     template_name = "mini_fb/create_status_form.html"
@@ -70,13 +79,13 @@ class CreateStatusMessageView(CreateView):
 
         return super().form_valid(form)
     
-class UpdateProfileView(UpdateView):
+class UpdateProfileView(MyLoginRequiredMixin, UpdateView):
     '''View class to handle the update of a profile in the DB.'''
     model = Profile
     form_class = UpdateProfileForm
     template_name = "mini_fb/update_profile_form.html"
 
-class DeleteStatusMessageView(DeleteView):
+class DeleteStatusMessageView(MyLoginRequiredMixin, DeleteView):
     '''View class to delete a status message on a profile'''
     model = StatusMessage
     template_name = 'mini_fb/delete_status_form.html'
@@ -91,14 +100,14 @@ class DeleteStatusMessageView(DeleteView):
 
         return reverse('show_profile', kwargs={'pk' : profile.pk})
     
-class UpdateStatusMessageView(UpdateView):
+class UpdateStatusMessageView(MyLoginRequiredMixin, UpdateView):
     '''View class to handle the update of a status message in the DB.'''
     model = StatusMessage
     form_class = UpdateStatusMessageForm
     template_name = "mini_fb/update_status_form.html"
     context_object_name = 'status'
 
-class CreateFriendView(View):
+class CreateFriendView(MyLoginRequiredMixin, View):
     '''View class to handle the creation of a new friend relationship between two profiles.'''
     model = Profile
 
@@ -111,14 +120,14 @@ class CreateFriendView(View):
 
         return redirect(reverse('show_profile', kwargs={'pk' : profile1.pk}))
 
-class ShowFriendSuggestionsView(DetailView):
+class ShowFriendSuggestionsView(MyLoginRequiredMixin, DetailView):
     '''View class to handle the request to display the friend suggestions for a profile'''
 
     model = Profile
     template_name = 'mini_fb/friend_suggestions.html'
     context_object_name = 'profile'
 
-class ShowNewsFeedView(DetailView):
+class ShowNewsFeedView(MyLoginRequiredMixin, DetailView):
     '''View class to handle the request to see the news feed of a profile'''
     model = Profile
     template_name = 'mini_fb/news_feed.html'

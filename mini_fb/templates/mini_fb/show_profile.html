@@ -19,8 +19,10 @@
             <p>
                 Email: {{profile.email}}
             </p>
-            <a href="{% url 'update_profile' profile.pk %}" class="btn">Update Profile</a>
-            <a href="{% url 'news_feed' profile.pk %}" class="btn">{{profile.first_name}}'s News Feed</a>
+            {% if request.user == profile.user %}
+                <a href="{% url 'update_profile' profile.pk %}" class="btn">Update Profile</a>
+                <a href="{% url 'news_feed' profile.pk %}" class="btn">Your News Feed</a>
+            {% endif %}
         </div>
     </div>
     <div class="status-container">
@@ -37,15 +39,19 @@
                         <img src="{{ img.image.url }}" alt="{{ img.image.url }}">
                     {% endfor %}
                 </div>
-                <div class="action-buttons">
-                    <a href="{% url 'delete_status' msg.pk %}" class="btn">Delete</a>
-                    <a href="{% url 'update_status' msg.pk %}" class="btn">Update</a>
-                </div>
+                {% if request.user == profile.user %}
+                    <div class="action-buttons">
+                        <a href="{% url 'delete_status' msg.pk %}" class="btn">Delete</a>
+                        <a href="{% url 'update_status' msg.pk %}" class="btn">Update</a>
+                    </div>
+                {% endif %}
             </div>
         </div>
         {% endfor %}
         <h3>
-            <a href="{% url 'create_status' profile.pk %}" class="btn">Create a new Status Message</a>
+            {% if request.user == profile.user %}
+                <a href="{% url 'create_status' profile.pk %}" class="btn">Create a new Status Message</a>
+            {% endif %}
         </h3>
     </div>
 
@@ -60,9 +66,10 @@
             </a>
         {% endfor %}
     </div>
-    <a href="{% url 'friend_suggestions' profile.pk %}" class="btn">
-        Friend Suggestions
-    </a>
-
+    {% if request.user == profile.user %}
+        <a href="{% url 'friend_suggestions' profile.pk %}" class="btn">
+            Friend Suggestions
+        </a>
+    {% endif %}
 </main>
 {% endblock %}
