@@ -47,9 +47,8 @@ nav ul {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 20px;
-    background-color: #fff8f0;
-    padding: 10px 0;
+    gap: 25px;
+    padding: 5px 0;
 }
 
 nav ul li {
@@ -60,14 +59,41 @@ nav ul li a {
     color: #fff8f0;
     text-decoration: none;
     font-weight: bold;
-    padding: 10px 15px;
     display: block;
+    padding: 15px 20px;
 }
 
 nav ul li a:hover {
     background-color: rgba(255, 255, 255, 0.2);
     border-radius: 5px;
 }
+
+.logout-form {
+    display: inline;
+}
+
+.nav-btn {
+    display: inline-block;
+    padding: 15px 25px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #1e1e24;
+    background-color: #fff8f0;
+    border: none;
+    border-radius: 8px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 20px auto 0;
+    display: block;
+    width: fit-content;
+}
+
+.nav-btn:hover {
+    background-color: #d9c3a8;
+}
+
 
 /* Table styles */
 table {

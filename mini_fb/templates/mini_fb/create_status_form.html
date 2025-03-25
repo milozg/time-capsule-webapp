@@ -3,7 +3,7 @@
 {% extends 'mini_fb/base.html' %}
 
 {% block content %}
-    <h1>Create a new status about {{profile.first_name}}</h1>
+    <h1>Create a New Status Message</h1>
     <form method = 'POST' enctype="multipart/form-data">
         {% csrf_token %}
         <table>
@@ -14,7 +14,7 @@
         </div>
         <input type="submit" name="submit" value="Submit" class="btn">
     </form>
-    <form action="{% url 'show_profile' profile.pk%}">
+    <form action="{% url 'show_my_profile' %}">
         <input type="submit" value="Cancel" class="btn">
     </form>
 {% endblock %}

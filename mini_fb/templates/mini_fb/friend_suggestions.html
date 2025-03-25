@@ -28,14 +28,14 @@
                     <img src="{{p.image_url}}" alt="" class="profile-img">
                 </td>
                 <td>
-                    <a href="{% url 'add_friend' profile.pk p.pk%}" class="btn">
+                    <a href="{% url 'add_friend' p.pk%}" class="btn">
                         Add Friend
                     </a>
                 </td>
             </tr>
         {% endfor %}
     </table>
-    <a href="{% url 'show_profile' profile.pk%}" class="btn">
+    <a href="{% url 'show_my_profile' %}" class="btn">
         Back to {{profile.first_name}}'s Page
     </a>
 {% endblock %}

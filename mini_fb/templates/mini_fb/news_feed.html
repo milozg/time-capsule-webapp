@@ -7,7 +7,7 @@
 {% block content %}
     <div class="status-container">
         <h1>News Feed</h1>
-        <a href="{% url 'show_profile' profile.pk%}" class="btn"> Back to Profile</a><br>
+        <a href="{% url 'show_my_profile' %}" class="btn"> Back to Profile</a><br>
         {% for msg in profile.get_news_feed %}
             <div class="status-message">
                 <div class="status-content">

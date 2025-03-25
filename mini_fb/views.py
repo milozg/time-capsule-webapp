@@ -15,6 +15,20 @@ class MyLoginRequiredMixin(LoginRequiredMixin):
     def get_login_url(self):
         '''return the login url'''
         return reverse('login')
+    
+class ShowMyProfileView(View):
+    '''Find the current users profile to redirect to a show profile page view.'''
+    model = Profile
+
+    def get_object(self):
+        return Profile.objects.get(user=self.request.user)
+
+    def dispatch(self, request, *args, **kwargs):
+        '''redirect to show the profile of the currently logged in user.'''
+
+        profile1 = self.get_object()
+
+        return redirect(reverse('show_profile', kwargs={'pk' : profile1.pk}))
 
 class ShowAllProfilesView(ListView):
     '''Define a view class to show all Profiles'''
@@ -40,25 +54,25 @@ class CreateStatusMessageView(MyLoginRequiredMixin, CreateView):
     form_class = CreateStatusMessageForm
     template_name = "mini_fb/create_status_form.html"
 
+    def get_object(self):
+        return Profile.objects.get(user=self.request.user)
+
     def get_success_url(self):
         '''Provide a URL to redirect to after creating a new status message'''
-        pk = self.kwargs['pk']
+        pk = self.get_object().pk
         return reverse('show_profile', kwargs={'pk' : pk})
     
     def get_context_data(self):
         '''Return the dictionary of context variables for use in the template'''
         context = super().get_context_data()
-        pk = self.kwargs['pk']
-        profile = Profile.objects.get(pk=pk)
+        profile = self.get_object()
         context['profile'] = profile
         return context
-
     
     def form_valid(self, form):
         '''Handle the form submission and save the new object to the Django database.'''
 
-        pk = self.kwargs['pk']
-        profile = Profile.objects.get(pk=pk)
+        profile = self.get_object()
         form.instance.profile = profile
 
         # print(f'CreateSMView: form.cleaned_data={form.cleaned_data}')
@@ -84,6 +98,9 @@ class UpdateProfileView(MyLoginRequiredMixin, UpdateView):
     model = Profile
     form_class = UpdateProfileForm
     template_name = "mini_fb/update_profile_form.html"
+
+    def get_object(self):
+        return Profile.objects.get(user=self.request.user)
 
 class DeleteStatusMessageView(MyLoginRequiredMixin, DeleteView):
     '''View class to delete a status message on a profile'''
@@ -111,10 +128,13 @@ class CreateFriendView(MyLoginRequiredMixin, View):
     '''View class to handle the creation of a new friend relationship between two profiles.'''
     model = Profile
 
+    def get_object(self):
+        return Profile.objects.get(user=self.request.user)
+
     def dispatch(self, request, *args, **kwargs):
         '''Call the profile1 add friend method.'''
 
-        profile1 = Profile.objects.get(pk=kwargs['pk'])
+        profile1 = self.get_object()
         profile2 = Profile.objects.get(pk=kwargs['other_pk'])
         profile1.add_friend(profile2)
 
@@ -127,8 +147,14 @@ class ShowFriendSuggestionsView(MyLoginRequiredMixin, DetailView):
     template_name = 'mini_fb/friend_suggestions.html'
     context_object_name = 'profile'
 
+    def get_object(self):
+        return Profile.objects.get(user=self.request.user)
+
 class ShowNewsFeedView(MyLoginRequiredMixin, DetailView):
     '''View class to handle the request to see the news feed of a profile'''
     model = Profile
     template_name = 'mini_fb/news_feed.html'
     context_object_name = 'profile'
+
+    def get_object(self):
+        return Profile.objects.get(user=self.request.user)
