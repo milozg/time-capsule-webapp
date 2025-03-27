@@ -7,6 +7,8 @@ from .forms import *
 from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
 
 # Create your views here.
 
@@ -48,6 +50,19 @@ class CreateProfileView(CreateView):
     '''A view to handle the creation of a new profile'''
     form_class = CreateProfileForm
     template_name = 'mini_fb/create_profile_form.html'
+    def get_context_data(self):
+        context = super().get_context_data()
+        userForm = UserCreationForm
+        context['userForm'] = userForm
+        return context
+    def form_valid(self, form):
+        userForm = UserCreationForm(self.request.POST)
+        user = userForm.save()
+        login(self.request,user)
+
+        form.instance.user = user
+
+        return super().form_valid(form)
 
 class CreateStatusMessageView(MyLoginRequiredMixin, CreateView):
     '''A view to create a new status message and save it to the database.'''

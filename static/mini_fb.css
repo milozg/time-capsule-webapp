@@ -285,6 +285,14 @@ form table td {
     border-bottom: 1px solid #ddd;
 }
 
+.login-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+}
+
 /* Style the file input directly */
 .styled-file-input {
     display: inline-block;
