@@ -1,0 +1,21 @@
+<!-- voter_analytics/templates/voter_analytics/graphs.html 
+    Display different charts about the distribution of voters in Newton.
+-->
+{% extends 'voter_analytics/base.html' %}
+
+{% block content %}
+	<h1>Graphs</h1>
+    {% include 'voter_analytics/search_graphs.html' %}
+
+    <div class="profile-container">
+        {{graph_div_birth_year|safe}} 
+    </div>
+
+    <div class="profile-container">
+        {{graph_div_affiliation|safe}} 
+    </div>
+
+    <div class="profile-container">
+        {{graph_div_turnout|safe}} 
+    </div>
+{% endblock %}

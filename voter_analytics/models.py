@@ -35,6 +35,17 @@ class Voter(models.Model):
     v23town = models.TextField()
     voter_score = models.IntegerField()
 
+    def get_address(self):
+        '''return a string of the address of this voter'''
+        address = "https://www.google.com/maps?q="
+        address += self.street_number + "+"
+        address += self.street_name + ",+"
+        address += "Newton+MA,+"
+        address += self.zip_code
+
+        return address
+
+
     def __str__(self):
         '''Return a string representation of the voter model'''
         return f'{self.first_name} {self.last_name}'
