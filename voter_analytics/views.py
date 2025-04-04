@@ -81,8 +81,11 @@ class GraphsView(ListView):
     template_name = 'voter_analytics/graphs.html'
     context_object_name = 'voters'
 
-    def get_queryset(self):
-        voters = super().get_queryset()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Filter the data by the form fields
+        voters = self.get_queryset()
 
         if 'affiliation' in self.request.GET:
             affiliation = self.request.GET['affiliation']
@@ -118,17 +121,12 @@ class GraphsView(ListView):
         if 'v23town' in self.request.GET:
             voters = voters.filter(v23town="TRUE")
 
-        return voters
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
         # Distribution by birth year
         x = []
         y = []
         for i in range(1920,2005):
             x.append(str(i))
-            y.append(len(self.get_queryset().filter(dob__year=i)))
+            y.append(len(voters.filter(dob__year=i)))
         fig = go.Bar(x=x, y=y)
         title_text = "Voter Distribution by Year of Birth"
         graph_div_birth_year = plotly.offline.plot({"data": [fig], 
@@ -140,11 +138,11 @@ class GraphsView(ListView):
 
 
         # Distribution by party affiliation
-        x = list(self.get_queryset().values_list('affiliation', flat=True).distinct())
+        x = list(voters.values_list('affiliation', flat=True).distinct())
         x = x[:10]
         y = []
         for a in x:
-            y.append(len(self.get_queryset().filter(affiliation=a)))
+            y.append(len(voters.filter(affiliation=a)))
         fig = go.Pie(labels=x, values=y) 
         title_text = "Voter Distribution by Party Affiliation"
         graph_div_affiliation = plotly.offline.plot({"data": [fig], 
@@ -157,11 +155,11 @@ class GraphsView(ListView):
         #Vote count by election
         x = ["v20state", "v21town", "v21primary", "v22general", "v23town"]
         y = []
-        y.append(len(self.get_queryset().filter(v20state="TRUE")))
-        y.append(len(self.get_queryset().filter(v21town="TRUE")))
-        y.append(len(self.get_queryset().filter(v21primary="TRUE")))
-        y.append(len(self.get_queryset().filter(v22general="TRUE")))
-        y.append(len(self.get_queryset().filter(v23town="TRUE")))
+        y.append(len(voters.filter(v20state="TRUE")))
+        y.append(len(voters.filter(v21town="TRUE")))
+        y.append(len(voters.filter(v21primary="TRUE")))
+        y.append(len(voters.filter(v22general="TRUE")))
+        y.append(len(voters.filter(v23town="TRUE")))
         fig = go.Bar(x=x, y=y)
         title_text = "Voter Count by Election"
         graph_div_turnout = plotly.offline.plot({"data": [fig], 
