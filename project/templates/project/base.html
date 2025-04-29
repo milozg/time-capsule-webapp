@@ -1,0 +1,47 @@
+<!-- project/templates/project/base.html -->
+
+{% load static %}
+
+<html>
+    <head>
+        <title>Time Capsule</title>
+        <link rel="stylesheet" href="{% static 'project.css' %}">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <header>
+            <h1>Time Capsule</h1>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'about' %}" class="nav-link">About</a></li>
+                    {% if request.user.is_authenticated %}
+                        <li><a href="{% url 'profile_home' %}" class="nav-link">My Time Capsule</a></li>
+                        <li>
+                            <form action="{% url 'logout' %}" method="POST" class="logout-form">
+                                {% csrf_token %}
+                                <input type="submit" value="Logout" class="nav-link">
+                            </form>
+                        </li>                 
+                    {% else %}
+                        <li><a href="{% url 'login' %}" class="nav-link">Log in</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% if request.user.is_authenticated %}
+                {% if profile.profile_pic %}
+                    <img src="{{profile.profile_pic.url}}" alt="{{profile.profile_pic.url}}" class="profile-pic">
+                {% else %}
+                    <img src="../../../media/default_profile_pic.jpg" alt="default profile picture" class="profile-pic">
+                {% endif %}
+            {% endif %}
+        </header>
+    
+        {% block content %}
+        {% endblock %}    
+
+        <footer>
+            This page was created by Milo Zurn-Galinsky
+        </footer>
+  
+    </body>
+</html>

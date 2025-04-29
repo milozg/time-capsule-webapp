@@ -1,0 +1,27 @@
+<!-- project/templates/project/about.html -->
+{% extends 'project/base.html' %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-text">
+        <h1>Send a Message to the Future</h1>
+        <p>🌟 Create your personal time capsule. 🌟<br> Write messages to your future self — dreams, thoughts, hopes, memories — and recieve them in the future!</p>
+        <a href="{% url 'create_pm' %}" class="btn-hero">Get Started</a>
+    </div>
+</section>
+
+<section class="features">
+    <div class="feature-card">
+        <h2>✨ Write Anything</h2>
+        <p>Document your wildest dreams, your plans, your memories — your story is yours to tell.</p>
+    </div>
+    <div class="feature-card">
+        <h2>🌈 A Fun Surprise</h2>
+        <p>Each message is saved and sent to you at a random time within a time frame you chose. Could be a year - could be ten.</p>
+    </div>
+    <div class="feature-card">
+        <h2>🎸 Totally Yours</h2>
+        <p>Private, personal, and just a little bit magical — your future self will thank you.</p>
+    </div>
+</section>
+{% endblock %}

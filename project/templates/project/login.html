@@ -1,0 +1,18 @@
+<!-- project/templates/login.html 
+    display the login form
+-->
+{% extends 'project/base.html' %}
+
+{% block content %}
+<div class="login-block">
+    <h1>Login</h1>
+    <form method="post" action="{% url 'login' %}" >
+        {% csrf_token %}
+        {{form}}
+        <input type="submit" value="Login">
+        <input type="hidden" name="next" value="{% url 'profile_home' %}">
+    </form>
+    <h2>Don't Have an Account?</h2>
+    <a href="{% url 'create_profile' %}" class="btn">Create Profile</a>
+</div>
+{% endblock %}

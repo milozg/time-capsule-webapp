@@ -1,0 +1,11 @@
+<!-- project/templates/project/logged_out.html 
+    display a confirmation of logging out
+-->
+{% extends 'project/base.html' %}
+
+{% block content %}
+    <div class="table-card">
+        <h1>Logged Out</h1>
+        <a href="{% url 'login' %}" class="btn">Log Back In</a>
+    </div>
+{% endblock %}

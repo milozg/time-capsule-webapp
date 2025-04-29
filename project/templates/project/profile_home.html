@@ -1,0 +1,59 @@
+<!-- project/templates/project/profile_home.html -->
+{% extends 'project/base.html' %}
+
+{% block content %}
+    <h1>{{profile.first_name}}'s Time Capsule</h1>
+    <div class="table-card">
+        <div class="pm-card-head">
+            <h2>Personal Messages</h2>
+            <a href="{% url 'create_pm' %}" class="btn">Create New Personal Message</a>
+        </div>
+        <p>Messages Still in Your Time Capsule:</p>
+        {% if profile.get_undeliverd_pms %}
+            <table>
+                <tr>
+                    <th>Subject</th>
+                    <th>Delivery</th>
+                </tr>
+                {% for pm in profile.get_undelivered_pms %}
+                    <tr>
+                        <td>
+                            <p><strong>{{pm.subject}}</strong></p>
+                            <p><em>Created:</em></p>
+                            <p><em>{{pm.created}}</em></p>
+                        </td>
+                        <td>
+                            <p><em>Delivery between</em></p>
+                            <p><strong>{{pm.min_delivery}}</strong></p>
+                            <p><em>and</em></p>
+                            <p><strong>{{pm.max_delivery}}</strong></p>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <h2>Nothing here! Write a message to add to your Time Capsule Above!</h2>
+        {% endif %}
+        <p>Messages Already Sent From Your Time Capsule:</p>
+        <table>
+            <tr>
+                <th>Subject</th>
+                <th>Delivery Date</th>
+            </tr>
+            {% for pm in profile.get_delivered_pms %}
+                <tr>
+                    <td>
+                        <p><strong>{{pm.subject}}</strong></p>
+                        <p><em>Created:</em></p>
+                        <p><em>{{pm.created}}</em></p>
+                    </td>
+                    <td>
+                        <p><em>Delivered:</em></p>
+                        <p><strong>{{pm.delivery_date}}</strong></p>
+                        <p><em>Check your email!!</em></p>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

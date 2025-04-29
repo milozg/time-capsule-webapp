@@ -1,0 +1,76 @@
+# project/models.py
+
+from django.db import models
+from django.contrib.auth.models import User
+import datetime, random, subprocess
+from datetime import timedelta
+from django.urls import reverse
+
+
+
+# Create your models here.
+class Profile(models.Model):
+    '''Encapsulate the data for a profile.'''
+    first_name = models.TextField(blank=False)
+    last_name = models.TextField(blank=True)
+    email = models.TextField(blank=False)
+    profile_pic = models.ImageField(blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='capsule_profile')
+
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}'
+    
+    def get_absolute_url(self):
+        '''Return a URL to display one instance of this object'''
+        return reverse('profile_home')
+    
+    def get_all_pms(self):
+        '''A function to return all personal messages associated with this profile.'''
+        pms = PersonalMessage.objects.filter(profile=self).order_by('-created')
+        return pms
+    
+    def get_undelivered_pms(self):
+        '''A function to return all personal messages that have not yet been delivered.'''
+        curr_time = datetime.datetime.now()
+
+        pms = PersonalMessage.objects.filter(profile=self, delivery_date__gt=curr_time)
+        return pms
+    
+    def get_delivered_pms(self):
+        '''A function to return all personal messages that have been delivered.'''
+        curr_time = datetime.datetime.now()
+
+        pms = PersonalMessage.objects.filter(profile=self, delivery_date__lt=curr_time)
+        return pms
+
+class PersonalMessage(models.Model):
+    '''Encapsulate the data of a message a profile makes to themselves.'''
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    subject = models.TextField(blank=False)
+    message = models.TextField(blank=True)
+    created = models.DateTimeField(auto_now=True)
+    min_delivery = models.DateTimeField(blank=False)
+    max_delivery = models.DateTimeField(blank=False)
+    delivery_date = models.DateTimeField(blank=True)
+
+    def __str__(self):
+        return f'{self.subject}'
+    
+    def add_at_job(self):
+        '''A function to create an at job that will send this message at a random time in the specified range.
+            Will be called once upon the save of this PersonalMessage record.
+        '''
+
+        # convert delivery date to at time
+        at_time = self.delivery_date.strftime('%H:%M %b %d %Y')
+
+        # Command to send the specified message to the specified email
+        command = f'echo "mailx -s \\"{self.subject}\\" \\"{self.profile.email}\\" <<< \\"{self.message}\\"" > /Users/mish/Desktop/test.txt'
+        # ^ right now just echo's the command to my desktop as mailx is hard to set up on local machine
+
+        process = subprocess.run(
+            ['at', at_time],
+            input=command.encode(),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
