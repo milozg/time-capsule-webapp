@@ -2,11 +2,28 @@
 
 from django.db import models
 from django.contrib.auth.models import User
-import subprocess
 from django.urls import reverse
 from django.utils import timezone
 
+def at_job_helper(delivery_date, subject, email, message):
+    '''A helper function that will add an email at job given the required fields.'''
+    # convert delivery date to at time
+    at_time = delivery_date.strftime('%H:%M %b %d %Y')
 
+    # New Approach:
+    # Add atjobs as sh files to a directory and have a crontab call a script every minute.
+    # When the script will go through the directory and add any jobs there as at jobs then
+    # remove them.
+    job_id = timezone.now().strftime("%Y%m%d%H%M%S")
+    command = f'mailx -s \\"{subject}\\" \\"{email}\\" <<< \\"{message}\\"'
+
+    # For local:
+    # with open(f'/Users/mish/Desktop/job_queue/{job_id}.sh', 'w') as f:
+    #     f.write(f'echo "{command}" | at {at_time}\n')
+
+    # For Server
+    with open(f'/home/ugrad/milozg/job_queue/{job_id}.sh', 'w') as f:
+        f.write(f'echo "{command}" | at {at_time}\n')
 
 # Create your models here.
 class Profile(models.Model):
@@ -60,52 +77,4 @@ class PersonalMessage(models.Model):
         '''A function to create an at job that will send this message at a random time in the specified range.
             Will be called once upon the save of this PersonalMessage record.
         '''
-
-        # convert delivery date to at time
-        at_time = self.delivery_date.strftime('%H:%M %b %d %Y')
-
-
-        # Original code below, did not have permissions on server to create at jobs from
-        # django. Will try a different approach
-
-        # Code for when on server:
-        # 
-        # command = f'mailx -s \\"{self.subject}\\" \\"{self.profile.email}\\" <<< \\"{self.message}\\"'
-        # process = subprocess.Popen(
-        #     ['at', at_time],
-        #     user=421387,
-        #     stdin=subprocess.PIPE,
-        #     stdout=subprocess.PIPE,
-        #     stderr=subprocess.PIPE
-        # )
-        # stdout, stderr = process.communicate(input=command.encode())
-
-        # Code for when local:
-        # 
-        # command = f'echo "mailx -s \\"{self.subject}\\" \\"{self.profile.email}\\" <<< \\"{self.message}\\"" > /Users/mish/Desktop/test.txt'
-        # process = subprocess.Popen(
-        #     ['at', at_time],
-        #     stdin=subprocess.PIPE,
-        #     stdout=subprocess.PIPE,
-        #     stderr=subprocess.PIPE
-        # )
-        # stdout, stderr = process.communicate(input=command.encode())
-
-        # New Approach:
-        # Add atjobs as sh files to a directory and have a crontab call a script every minute.
-        # When the script will go through the directory and add any jobs there as at jobs then
-        # remove them.
-
-        # For local:
-        # job_id = timezone.now().strftime("%Y%m%d%H%M%S")
-        # command = f'echo "mailx -s \\"{self.subject}\\" \\"{self.profile.email}\\" <<< \\"{self.message}\\"" > /Users/mish/Desktop/test.txt'
-
-        # with open(f'/Users/mish/Desktop/job_queue/{job_id}.sh', 'w') as f:
-        #     f.write(f'echo "{command}" | at {at_time}\n')
-
-        # For Server
-        job_id = timezone.now().strftime("%Y%m%d%H%M%S")
-        command = f'mailx -s \\"{self.subject}\\" \\"{self.profile.email}\\" <<< \\"{self.message}\\"'
-
-        with open(f'/home/ugrad/milozg/job_queue/{job_id}.sh', 'w') as f:
-            f.write(f'echo "{command}" | at {at_time}\n')
+        at_job_helper(self.delivery_date, self.subject, self.profile.email, self.message)
