@@ -65,7 +65,7 @@ class PersonalMessage(models.Model):
         at_time = self.delivery_date.strftime('%H:%M %b %d %Y')
 
         # Command to send the specified message to the specified email
-        command = f'echo "mailx -s \\"{self.subject}\\" \\"{self.profile.email}\\" <<< \\"{self.message}\\"" > /Users/mish/Desktop/test.txt'
+        command = f'mailx -s \\"{self.subject}\\" \\"{self.profile.email}\\" <<< \\"{self.message}\\"'
         # ^ right now just echo's the command to my desktop as mailx is hard to set up on local machine
 
         process = subprocess.run(
