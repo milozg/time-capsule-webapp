@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'marathon_analytics',
     'voter_analytics',
     'project',
-    'formset',
 ]
 
 MIDDLEWARE = [

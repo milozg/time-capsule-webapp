@@ -2,7 +2,6 @@
 
 from django import forms
 from .models import *
-from formset.widgets import DateTimeInput
 
 class CreateProfileForm(forms.ModelForm):
     '''A form to add a Profile to the database'''
@@ -17,7 +16,3 @@ class CreatePersonalMessageForm(forms.ModelForm):
         '''Associate this form with a model from our database'''
         model = PersonalMessage
         fields = ['subject', 'message', 'min_delivery', 'max_delivery']
-        widgets = {
-            'min_delivery':DateTimeInput,
-            'max_delivery':DateTimeInput,
-        }
