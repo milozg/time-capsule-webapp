@@ -105,7 +105,7 @@ class PersonalMessage(models.Model):
 
         # For Server
         job_id = timezone.now().strftime("%Y%m%d%H%M%S")
-        command = f'mailx -s "{self.subject}" "{self.profile.email}" <<< "{self.message}"'
+        command = f'mailx -s \\"{self.subject}\\" \\"{self.profile.email}\\" <<< \\"{self.message}\\"'
 
         with open(f'/home/ugrad/milozg/job_queue/{job_id}.sh', 'w') as f:
             f.write(f'echo "{command}" | at {at_time}\n')
