@@ -2,9 +2,9 @@
 
 from django.db import models
 from django.contrib.auth.models import User
-import datetime, random, subprocess
-from datetime import timedelta
+import subprocess
 from django.urls import reverse
+from django.utils import timezone
 
 
 
@@ -31,14 +31,14 @@ class Profile(models.Model):
     
     def get_undelivered_pms(self):
         '''A function to return all personal messages that have not yet been delivered.'''
-        curr_time = datetime.datetime.now()
+        curr_time = timezone.now()
 
         pms = PersonalMessage.objects.filter(profile=self, delivery_date__gt=curr_time)
         return pms
     
     def get_delivered_pms(self):
         '''A function to return all personal messages that have been delivered.'''
-        curr_time = datetime.datetime.now()
+        curr_time = timezone.now()
 
         pms = PersonalMessage.objects.filter(profile=self, delivery_date__lt=curr_time)
         return pms

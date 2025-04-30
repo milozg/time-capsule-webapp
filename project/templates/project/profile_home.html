@@ -9,7 +9,7 @@
             <a href="{% url 'create_pm' %}" class="btn">Create New Personal Message</a>
         </div>
         <p>Messages Still in Your Time Capsule:</p>
-        {% if profile.get_undeliverd_pms %}
+        {% if profile.get_undelivered_pms %}
             <table>
                 <tr>
                     <th>Subject</th>

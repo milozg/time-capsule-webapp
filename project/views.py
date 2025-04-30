@@ -10,8 +10,7 @@ from django.urls import reverse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 import datetime, random
-import pytz
-from pytz import timezone
+from django.utils import timezone
 
 def random_datetime(start, end):
     '''A function to return a random datetime between two input datetimes.'''
@@ -90,9 +89,9 @@ class CreatePersonalMessageView(MyLoginRequiredMixin, CreateView):
         profile = self.get_object()
         form.instance.profile = profile
 
-        est = timezone('America/New_York')
         dt = random_datetime(form.instance.min_delivery, form.instance.max_delivery)
-        form.instance.delivery_date = est.localize(dt)
+        dt = dt.astimezone(timezone.get_current_timezone())
+        form.instance.delivery_date = dt
 
         pm = form.save()
         pm.add_at_job()
