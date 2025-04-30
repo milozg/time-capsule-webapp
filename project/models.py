@@ -64,18 +64,24 @@ class PersonalMessage(models.Model):
         # convert delivery date to at time
         at_time = self.delivery_date.strftime('%H:%M %b %d %Y')
 
-        # Code for when on server
-        command = f'mailx -s \\"{self.subject}\\" \\"{self.profile.email}\\" <<< \\"{self.message}\\"'
-        process = subprocess.Popen(
-            ['at', at_time],
-            user=421387,
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
-        )
-        stdout, stderr = process.communicate(input=command.encode())
 
-        # Code for when local
+        # Original code below, did not have permissions on server to create at jobs from
+        # django. Will try a different approach
+
+        # Code for when on server:
+        # 
+        # command = f'mailx -s \\"{self.subject}\\" \\"{self.profile.email}\\" <<< \\"{self.message}\\"'
+        # process = subprocess.Popen(
+        #     ['at', at_time],
+        #     user=421387,
+        #     stdin=subprocess.PIPE,
+        #     stdout=subprocess.PIPE,
+        #     stderr=subprocess.PIPE
+        # )
+        # stdout, stderr = process.communicate(input=command.encode())
+
+        # Code for when local:
+        # 
         # command = f'echo "mailx -s \\"{self.subject}\\" \\"{self.profile.email}\\" <<< \\"{self.message}\\"" > /Users/mish/Desktop/test.txt'
         # process = subprocess.Popen(
         #     ['at', at_time],
@@ -84,3 +90,22 @@ class PersonalMessage(models.Model):
         #     stderr=subprocess.PIPE
         # )
         # stdout, stderr = process.communicate(input=command.encode())
+
+        # New Approach:
+        # Add atjobs as sh files to a directory and have a crontab call a script every minute.
+        # When the script will go through the directory and add any jobs there as at jobs then
+        # remove them.
+
+        # For local:
+        # job_id = timezone.now().strftime("%Y%m%d%H%M%S")
+        # command = f'echo "mailx -s \\"{self.subject}\\" \\"{self.profile.email}\\" <<< \\"{self.message}\\"" > /Users/mish/Desktop/test.txt'
+
+        # with open(f'/Users/mish/Desktop/job_queue/{job_id}.sh', 'w') as f:
+        #     f.write(f'echo "{command}" | at {at_time}\n')
+
+        # For Server
+        job_id = timezone.now().strftime("%Y%m%d%H%M%S")
+        command = f'mailx -s \\"{self.subject}\\" \\"{self.profile.email}\\" <<< \\"{self.message}\\"'
+
+        with open(f'/Users/mish/Desktop/job_queue/{job_id}.sh', 'w') as f:
+            f.write(f'{command} | at {at_time}\n')
