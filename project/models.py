@@ -64,13 +64,23 @@ class PersonalMessage(models.Model):
         # convert delivery date to at time
         at_time = self.delivery_date.strftime('%H:%M %b %d %Y')
 
-        # Command to send the specified message to the specified email
+        # Code for when on server
         command = f'mailx -s \\"{self.subject}\\" \\"{self.profile.email}\\" <<< \\"{self.message}\\"'
-        # ^ right now just echo's the command to my desktop as mailx is hard to set up on local machine
-
-        process = subprocess.run(
+        process = subprocess.Popen(
             ['at', at_time],
-            input=command.encode(),
+            user=421387,
+            stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
         )
+        stdout, stderr = process.communicate(input=command.encode())
+
+        # Code for when local
+        # command = f'echo "mailx -s \\"{self.subject}\\" \\"{self.profile.email}\\" <<< \\"{self.message}\\"" > /Users/mish/Desktop/test.txt'
+        # process = subprocess.Popen(
+        #     ['at', at_time],
+        #     stdin=subprocess.PIPE,
+        #     stdout=subprocess.PIPE,
+        #     stderr=subprocess.PIPE
+        # )
+        # stdout, stderr = process.communicate(input=command.encode())
