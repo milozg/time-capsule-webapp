@@ -4,7 +4,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils import timezone
-from django.db.models import Q
 
 def at_job_helper(delivery_date, subject, email, message):
     '''A helper function that will add an email at job given the required fields.'''
@@ -19,12 +18,12 @@ def at_job_helper(delivery_date, subject, email, message):
     command = f'mailx -s \\"{subject}\\" \\"{email}\\" <<< \\"{message}\\"'
 
     # For local:
-    with open(f'/Users/mish/Desktop/job_queue/{job_id}.sh', 'w') as f:
-        f.write(f'echo "{command}" | at {at_time}\n')
+    # with open(f'/Users/mish/Desktop/job_queue/{job_id}.sh', 'w') as f:
+    #     f.write(f'echo "{command}" | at {at_time}\n')
 
     # For Server
-    # with open(f'/home/ugrad/milozg/job_queue/{job_id}.sh', 'w') as f:
-    #     f.write(f'echo "{command}" | at {at_time}\n')
+    with open(f'/home/ugrad/milozg/job_queue/{job_id}.sh', 'w') as f:
+        f.write(f'echo "{command}" | at {at_time}\n')
 
 # Create your models here.
 class Profile(models.Model):
