@@ -3,6 +3,8 @@
 
 {% block content %}
     <h1>{{profile.first_name}}'s Time Capsule</h1>
+
+    <!-- Personal Messages -->
     <div class="table-card">
         <div class="pm-card-head">
             <h2>Personal Messages</h2>
@@ -34,28 +36,92 @@
         {% else %}
             <h2>Nothing here! Write a message to add to your Time Capsule Above!</h2>
         {% endif %}
-        <p>Messages Already Sent From Your Time Capsule:</p>
-        <table>
-            <tr>
-                <th>Subject</th>
-                <th>Delivery Date</th>
-            </tr>
-            {% for pm in profile.get_delivered_pms %}
+        {% if profile.get_delivered_pms %}
+            <p>Messages Already Sent From Your Time Capsule:</p>
+            <table>
                 <tr>
-                    <td>
-                        <p><strong>{{pm.subject}}</strong></p>
-                        <p><em>Created:</em></p>
-                        <p><em>{{pm.created}}</em></p>
-                    </td>
-                    <td>
-                        <p><em>Delivered:</em></p>
-                        <p><strong>{{pm.delivery_date}}</strong></p>
-                        <p><em>Check your email!!</em></p>
-                    </td>
+                    <th>Subject</th>
+                    <th>Delivery Date</th>
                 </tr>
-            {% endfor %}
-        </table>
+                {% for pm in profile.get_delivered_pms %}
+                    <tr>
+                        <td>
+                            <p><strong>{{pm.subject}}</strong></p>
+                            <p><em>Created:</em></p>
+                            <p><em>{{pm.created}}</em></p>
+                        </td>
+                        <td>
+                            <p><em>Delivered:</em></p>
+                            <p><strong>{{pm.delivery_date}}</strong></p>
+                            <p><em>Check your email!!</em></p>
+                            <a href="{% url 'delete_pm' pm.pk%}" class="btn">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
     </div>
+
+    <!-- Groups -->
+    <div class="table-card">
+        <div class="pm-card-head">
+            <h2>Your Groups</h2>
+            <a href="{% url 'create_group' %}" class="btn">Create a new Group</a>
+        </div>
+        <p>Groups still open to messages:</p>
+        {% if profile.get_open_groups %}
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Deadline to Add a Message</th>
+                </tr>
+                {% for group in profile.get_open_groups %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'show_group' group.pk %}">
+                                <p><strong>{{group.name}}</strong></p>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{% url 'show_group' group.pk %}">
+                                <p><strong>{{group.min_delivery}}</strong></p>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <h2>Nothing here! Create a new group above.</h2>
+        {% endif %}
+        {% if profile.get_closed_groups %}
+            <p>Wait For The Surprise! Group Time Capsules that have been sealed:</p>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Delivery Date</th>
+                </tr>
+                {% for group in profile.get_closed_groups %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'show_group' group.pk %}">
+                                <p><strong>{{group.name}}</strong></p>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{% url 'show_group' group.pk %}">
+                                <p><em>Delivery between</em></p>
+                                <p><strong>{{group.min_delivery}}</strong></p>
+                                <p><em>and</em></p>
+                                <p><strong>{{group.max_delivery}}</strong></p>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+    </div>
+
+    <!-- Friends -->
     <h1>{{profile.first_name}}'s Friends</h1>
     <div class="friends-container">
         {% for p in profile.get_friends %}

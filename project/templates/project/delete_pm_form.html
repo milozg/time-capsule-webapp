@@ -1,0 +1,19 @@
+<!-- project/templates/project/delete_pm_form.html 
+    Displays two small forms for confirmation on the delete of the personal message.
+-->
+
+{% extends 'project/base.html' %}
+
+{% block content %}
+    <h1>Are you sure you want to delete this personal message?</h1>
+    <h2>{{pm.subject}}</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Delete" class="btn">
+    </form>
+
+    <form action="{% url 'profile_home' %}" method="GET">
+        <input type="submit" value="Cancel" class="btn">
+    </form>
+{% endblock %}

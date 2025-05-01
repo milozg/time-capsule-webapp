@@ -48,11 +48,13 @@ class CreateProfileView(CreateView):
     '''A view to handle the creation of a new profile'''
     form_class = CreateProfileForm
     template_name = 'project/create_profile_form.html'
+
     def get_context_data(self):
         context = super().get_context_data()
         userForm = UserCreationForm
         context['userForm'] = userForm
         return context
+    
     def form_valid(self, form):
         print(self.request.POST)
         userForm = UserCreationForm(self.request.POST)
@@ -89,6 +91,9 @@ class CreatePersonalMessageView(MyLoginRequiredMixin, CreateView):
         profile = self.get_object()
         form.instance.profile = profile
 
+        form.instance.min_delivery = form.instance.min_delivery.astimezone(timezone.get_current_timezone())
+        form.instance.max_delivery = form.instance.max_delivery.astimezone(timezone.get_current_timezone())
+
         dt = random_datetime(form.instance.min_delivery, form.instance.max_delivery)
         dt = dt.astimezone(timezone.get_current_timezone())
         form.instance.delivery_date = dt
@@ -97,6 +102,16 @@ class CreatePersonalMessageView(MyLoginRequiredMixin, CreateView):
         pm.add_at_job()
 
         return super().form_valid(form)
+    
+class DeletePersonalMessageView(MyLoginRequiredMixin, DeleteView):
+    '''View class to delete a personal message on a profile'''
+    model = PersonalMessage
+    template_name = 'project/delete_pm_form.html'
+    context_object_name = 'pm'
+
+    def get_success_url(self):
+        '''Provide a URL to redirect to after creating a new status message'''
+        return reverse('profile_home')
     
 class SearchNewFriendsListView(MyLoginRequiredMixin, ListView):
     '''A class to handle the url to show a template that allows users to search for new friends.'''
@@ -142,3 +157,84 @@ class CreateFriendView(MyLoginRequiredMixin, View):
         profile1.add_friend(profile2)
 
         return redirect(reverse('profile_home'))
+    
+class CreateGroupView(MyLoginRequiredMixin, CreateView):
+    '''A view to create a new group and save it to the database.'''
+    form_class = CreateGroupForm
+    template_name = "project/create_group_form.html"
+
+    def get_form_kwargs(self):
+        '''Add the request to the form kwargs so it can access the user'''
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+
+    def get_object(self):
+        return Profile.objects.get(user=self.request.user)
+    
+    def get_context_data(self):
+        '''Return the dictionary of context variables for use in the template'''
+        context = super().get_context_data()
+        profile = self.get_object()
+        context['profile'] = profile
+        return context
+    
+    def form_valid(self, form):
+        '''Handle the form submission and save the new object to the Django database.'''
+
+        profile = self.get_object()
+
+        dt = random_datetime(form.instance.min_delivery, form.instance.max_delivery)
+        dt = dt.astimezone(timezone.get_current_timezone())
+        form.instance.delivery_date = dt
+
+        response = super().form_valid(form)
+
+        self.object.members.add(profile)
+
+        return response
+    
+class ShowGroupView(MyLoginRequiredMixin, DetailView):
+    '''A detail view to show the information about a group.'''
+    model = Group
+    template_name = 'project/show_group.html'
+    
+    def get_context_data(self, **kwargs):
+        '''Return the dictionary of context variables for use in the template'''
+        context = super().get_context_data(**kwargs)
+        profile = Profile.objects.get(user=self.request.user)
+        context['profile'] = profile
+        return context
+
+class CreateGroupMessageView(MyLoginRequiredMixin, CreateView):
+    '''A view to create a new group message and save it to the database.'''
+    form_class = CreateGroupMessageForm
+    template_name = "project/create_gm_form.html"
+
+    def get_success_url(self):
+        '''Provide a URL to redirect to after creating a new group message'''
+        pk = self.kwargs['pk']
+        return reverse('show_group', kwargs={'pk' : pk})
+    
+    def get_context_data(self):
+        '''Return the dictionary of context variables for use in the template'''
+        context = super().get_context_data()
+        profile = Profile.objects.get(user=self.request.user)
+        group = Group.objects.get(pk=self.kwargs['pk'])
+        context['profile'] = profile
+        context['group'] = group
+        return context
+    
+    def form_valid(self, form):
+        '''Handle the form submission and save the new object to the Django database.'''
+
+        profile = Profile.objects.get(user=self.request.user)
+        form.instance.profile = profile
+
+        group = Group.objects.get(pk=self.kwargs['pk'])
+        form.instance.group = group
+
+        gm = form.save()
+        gm.add_at_jobs()
+
+        return super().form_valid(form)

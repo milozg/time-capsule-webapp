@@ -1,0 +1,65 @@
+<!-- project/templates/project/show_group.html -->
+{% extends 'project/base.html' %}
+
+{% block content %}
+    <h1>{{group.name}}</h1>
+
+    <!-- Group Info -->
+    <div class="table-card">
+        <h2>Members:</h2>
+        <div class="friends-container">
+            {% for p in group.members.all %}
+                <div class="friend">
+                    <img src="{{p.profile_pic.url}}" alt="" class="profile-pic">
+                    <h2>{{p.first_name}}</h2>
+                </div>
+            {% endfor %}
+        </div>
+        <h2>Time Capsule Info:</h2>
+        <section class="features">
+            <div class="feature-card">
+                <h2>Deadlines!</h2>
+                <p>All messages must be written by</p>
+                <p><strong>{{group.min_delivery}}</strong></p>
+            </div>
+            <div class="feature-card">
+                <h2>Then you wait!</h2>
+                <p>Once the deadline has past expect you and your friend's messages to be delivered between:</p>
+                <p><strong>{{group.min_delivery}}</strong></p>
+                <p><em>and</em></p>
+                <p><strong>{{group.max_delivery}}</strong></p>
+            </div>
+        </section>
+    </div>
+
+
+    <!-- Group Messages -->
+    <div class="table-card">
+        <div class="pm-card-head">
+            <h2>Messages in {{group.name}} So Far</h2>
+            {% if not group.is_closed %}
+                <a href="{% url 'create_gm' group.pk %}" class="btn">Add a message to the group</a>
+            {% endif %}
+        </div>
+        {% if group.get_messages %}
+            <table>
+                <tr>
+                    <th>Author</th>
+                    <th>Subject</th>
+                </tr>
+                {% for gm in group.get_messages %}
+                    <tr>
+                        <td>
+                            <p><strong>{{gm.profile}}</strong></p>
+                        </td>
+                        <td>
+                            <p><strong>{{gm.subject}}</strong></p>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <h2>Nothing here! Be the first in the group to write a message!</h2>
+        {% endif %}
+    </div>
+{% endblock %}

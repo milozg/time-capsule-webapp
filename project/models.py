@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils import timezone
+from django.db.models import Q
 
 def at_job_helper(delivery_date, subject, email, message):
     '''A helper function that will add an email at job given the required fields.'''
@@ -14,7 +15,7 @@ def at_job_helper(delivery_date, subject, email, message):
     # Add atjobs as sh files to a directory and have a crontab call a script every minute.
     # When the script will go through the directory and add any jobs there as at jobs then
     # remove them.
-    job_id = timezone.now().strftime("%Y%m%d%H%M%S")
+    job_id = timezone.now().strftime("%Y%m%d%H%M%S.%f")
     command = f'mailx -s \\"{subject}\\" \\"{email}\\" <<< \\"{message}\\"'
 
     # For local:
@@ -50,14 +51,14 @@ class Profile(models.Model):
         '''A function to return all personal messages that have not yet been delivered.'''
         curr_time = timezone.now()
 
-        pms = PersonalMessage.objects.filter(profile=self, delivery_date__gt=curr_time)
+        pms = self.get_all_pms().filter(delivery_date__gt=curr_time)
         return pms
     
     def get_delivered_pms(self):
         '''A function to return all personal messages that have been delivered.'''
         curr_time = timezone.now()
 
-        pms = PersonalMessage.objects.filter(profile=self, delivery_date__lt=curr_time)
+        pms = self.get_all_pms().filter(delivery_date__lt=curr_time)
         return pms
     
     def add_friend(self, other):
@@ -76,15 +77,15 @@ class Profile(models.Model):
     def get_friends(self):
         '''Return a list of all the profiles that this profile is friends with.'''
         friend_relations = Friend.objects.all()
-        friends = []
+        friend_pks = []
 
         for rel in friend_relations:
             if rel.profile1 == self:
-                friends.append(rel.profile2)
+                friend_pks.append(rel.profile2.pk)
             elif rel.profile2 == self:
-                friends.append(rel.profile1)
+                friend_pks.append(rel.profile1.pk)
         
-        return friends
+        return Profile.objects.filter(pk__in=friend_pks)
     
     def get_not_friends(self):
         '''Return a queryset of all the profiles that this profile is not friends with.'''
@@ -94,6 +95,24 @@ class Profile(models.Model):
 
         not_friends = Profile.objects.exclude(pk__in=profiles_to_exclude)
         return not_friends
+    
+    def get_groups(self):
+        '''Return a queryset of all the groups that this profile belongs to.'''
+        return self.groups.all()
+    
+    def get_open_groups(self):
+        '''Return a queryset of all the groups that the profile is in that are still open to new messages.'''
+        curr_time = timezone.now()
+
+        groups = self.get_groups().filter(min_delivery__gt=curr_time)
+        return groups
+    
+    def get_closed_groups(self):
+        '''Return a queryset of all the groups that the profile is in that are not accepting new messages.'''
+        curr_time = timezone.now()
+
+        groups = self.get_groups().filter(min_delivery__lt=curr_time)
+        return groups
 
 class PersonalMessage(models.Model):
     '''Encapsulate the data of a message a profile makes to themselves.'''
@@ -116,8 +135,8 @@ class PersonalMessage(models.Model):
 
 class Friend(models.Model):
     '''Encapsulate a friendship between two profiles in the Database.'''
-    profile1 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="profile2")
-    profile2 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="profile1")
+    profile1 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="friend1")
+    profile2 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="friend2")
     timestamp = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -130,6 +149,27 @@ class Group(models.Model):
     min_delivery = models.DateTimeField(blank=False)
     max_delivery = models.DateTimeField(blank=False)
     delivery_date = models.DateTimeField(blank=True)
+    members = models.ManyToManyField(Profile, related_name="groups")
+
+    def __str__(self):
+        return self.name
+    
+    def get_absolute_url(self):
+        '''Return a URL to display one instance of this object'''
+        return reverse('show_group', kwargs={'pk':self.pk})
+    
+    def get_messages(self):
+        '''Return a queryset of all messages for this group.'''
+        gms = GroupMessage.objects.filter(group=self).order_by('-created')
+        return gms
+    
+    def is_closed(self):
+        '''
+            Return a boolean indicating whether or not the group is closed to new messages
+            i.e. the min delivery date has passed and thus new messages cannot be accepted
+        '''
+        curr_time = timezone.now()
+        return self.min_delivery <= curr_time
 
 class GroupMessage(models.Model):
     '''Encapsulate a message for a group that will be sent out with the other messages.'''
@@ -137,9 +177,17 @@ class GroupMessage(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     subject = models.TextField(blank=False)
     message = models.TextField(blank=True)
+    created = models.DateTimeField(auto_now=True)
 
-class GroupMember(models.Model):
-    '''Encapsulate a member(profile) of a group'''
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    def __str__(self):
+        return f'{self.profile}\'s message for {self.group} about {self.subject}'
+    
+    def add_at_jobs(self):
+        '''
+            A function to create at jobs that will send this message at a random time in the specified range
+            to all members of the group. Will be called once upon the save of this GroupMessage record.
+        '''
+        subject = f'{self.profile.first_name}\'s message in {self.group.name} about {self.subject}'
 
+        for member in self.group.members.all():
+            at_job_helper(self.group.delivery_date, subject, member.email, self.message)
