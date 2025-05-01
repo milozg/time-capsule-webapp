@@ -334,3 +334,28 @@ input[type="text"], input[type="email"], input[type="password"], textarea, selec
     color: #666;
 }
 
+.friends-container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px; /* Increased spacing between friends */
+    justify-content: center; /* Centers the friends in the container */
+}
+
+.friend {
+    padding: 10px;
+    background-color: #fff8f0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+    width: 120px; /* Smaller box */
+}
+
+.friend h2 {
+    margin-top: 8px;
+    font-size: 1em;
+    color: #333;
+}
+

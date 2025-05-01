@@ -18,12 +18,12 @@ def at_job_helper(delivery_date, subject, email, message):
     command = f'mailx -s \\"{subject}\\" \\"{email}\\" <<< \\"{message}\\"'
 
     # For local:
-    # with open(f'/Users/mish/Desktop/job_queue/{job_id}.sh', 'w') as f:
-    #     f.write(f'echo "{command}" | at {at_time}\n')
+    with open(f'/Users/mish/Desktop/job_queue/{job_id}.sh', 'w') as f:
+        f.write(f'echo "{command}" | at {at_time}\n')
 
     # For Server
-    with open(f'/home/ugrad/milozg/job_queue/{job_id}.sh', 'w') as f:
-        f.write(f'echo "{command}" | at {at_time}\n')
+    # with open(f'/home/ugrad/milozg/job_queue/{job_id}.sh', 'w') as f:
+    #     f.write(f'echo "{command}" | at {at_time}\n')
 
 # Create your models here.
 class Profile(models.Model):
@@ -59,6 +59,41 @@ class Profile(models.Model):
 
         pms = PersonalMessage.objects.filter(profile=self, delivery_date__lt=curr_time)
         return pms
+    
+    def add_friend(self, other):
+        '''Add a friend relationship for this profile and the one refered to in other, if it is valid.'''
+        if other == self:
+            return
+        if other in self.get_friends():
+            return
+        
+        new_friend = Friend()
+        new_friend.profile1 = self
+        new_friend.profile2 = other
+        new_friend.save()
+        return
+    
+    def get_friends(self):
+        '''Return a list of all the profiles that this profile is friends with.'''
+        friend_relations = Friend.objects.all()
+        friends = []
+
+        for rel in friend_relations:
+            if rel.profile1 == self:
+                friends.append(rel.profile2)
+            elif rel.profile2 == self:
+                friends.append(rel.profile1)
+        
+        return friends
+    
+    def get_not_friends(self):
+        '''Return a queryset of all the profiles that this profile is not friends with.'''
+
+        profiles_to_exclude = list(map(lambda p: p.pk, self.get_friends()))
+        profiles_to_exclude.append(self.pk)
+
+        not_friends = Profile.objects.exclude(pk__in=profiles_to_exclude)
+        return not_friends
 
 class PersonalMessage(models.Model):
     '''Encapsulate the data of a message a profile makes to themselves.'''
@@ -78,3 +113,33 @@ class PersonalMessage(models.Model):
             Will be called once upon the save of this PersonalMessage record.
         '''
         at_job_helper(self.delivery_date, self.subject, self.profile.email, self.message)
+
+class Friend(models.Model):
+    '''Encapsulate a friendship between two profiles in the Database.'''
+    profile1 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="profile2")
+    profile2 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="profile1")
+    timestamp = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.profile1.first_name} & {self.profile2.first_name}'
+    
+class Group(models.Model):
+    '''Encapsulate a group of profiles that contains group messages.'''
+    name = models.TextField(blank=False)
+    created = models.DateTimeField(auto_now=True)
+    min_delivery = models.DateTimeField(blank=False)
+    max_delivery = models.DateTimeField(blank=False)
+    delivery_date = models.DateTimeField(blank=True)
+
+class GroupMessage(models.Model):
+    '''Encapsulate a message for a group that will be sent out with the other messages.'''
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    subject = models.TextField(blank=False)
+    message = models.TextField(blank=True)
+
+class GroupMember(models.Model):
+    '''Encapsulate a member(profile) of a group'''
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+

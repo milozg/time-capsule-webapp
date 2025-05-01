@@ -53,7 +53,6 @@ class Profile(models.Model):
         new_friend.profile1 = self
         new_friend.profile2 = other
         new_friend.save()
-        return
     
     def get_friend_suggestions(self):
         '''Return a Queryset of friend suggestions for this profile'''

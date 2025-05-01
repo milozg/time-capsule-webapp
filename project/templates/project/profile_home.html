@@ -56,4 +56,16 @@
             {% endfor %}
         </table>
     </div>
+    <h1>{{profile.first_name}}'s Friends</h1>
+    <div class="friends-container">
+        {% for p in profile.get_friends %}
+            <div class="friend">
+                <img src="{{p.profile_pic.url}}" alt="" class="profile-pic">
+                <h2>{{p.first_name}}</h2>
+            </div>
+        {% endfor %}
+    </div>
+    <h2>
+        <a href="{% url 'search_new_friends' %}" class="btn">Add a Friend</a>
+    </h2>
 {% endblock %}

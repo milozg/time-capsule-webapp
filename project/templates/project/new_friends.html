@@ -1,0 +1,39 @@
+<!-- project/templates/project/new_friends.html
+    A template to show a form to search for new friends by name.
+-->
+{% extends 'project/base.html' %}
+
+{% block content %}
+    <h1>Search for a new friend</h1>
+    <div class="table-card">
+        {% include 'project/search_new_friends.html' %}
+        <table>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Profile Picture</th>
+                <th></th>
+            </tr>
+            {% for p in profiles %}
+                <tr>
+                    <td>
+                        <p>{{p.first_name}}</p>
+                    </td>
+                    <td>
+                        <p>{{p.last_name}}</p>
+                    </td>
+                    <td>
+                        {% if p.profile_pic %}
+                            <img src="{{p.profile_pic.url}}" alt="{{p.profile_pic.url}}" class="profile-pic">
+                        {% else %}
+                            <img src="../../../media/default_profile_pic.jpg" alt="default profile picture" class="profile-pic">
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'add_friend' p.pk %}" class="btn">Add {{p.first_name}} as a friend</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

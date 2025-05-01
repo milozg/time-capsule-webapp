@@ -97,3 +97,48 @@ class CreatePersonalMessageView(MyLoginRequiredMixin, CreateView):
         pm.add_at_job()
 
         return super().form_valid(form)
+    
+class SearchNewFriendsListView(MyLoginRequiredMixin, ListView):
+    '''A class to handle the url to show a template that allows users to search for new friends.'''
+    template_name = 'project/new_friends.html'
+    model = Profile
+    context_object_name = 'profiles'
+
+    def get_object(self):
+        return Profile.objects.get(user=self.request.user)
+    
+    def get_context_data(self):
+        '''Return the dictionary of context variables for use in the template'''
+        context = super().get_context_data()
+        profile = self.get_object()
+        context['profile'] = profile
+        return context
+
+    def get_queryset(self):
+        
+        # start with those who profile is not yet friends with
+        results = self.get_object().get_not_friends()
+
+        # filter results by these field(s):
+        if 'first_name' in self.request.GET:
+            first_name = self.request.GET['first_name']
+            if first_name:
+                results = results.filter(first_name=first_name)
+                
+        return results
+    
+class CreateFriendView(MyLoginRequiredMixin, View):
+    '''View class to handle the creation of a new friend relationship between two profiles.'''
+    model = Profile
+
+    def get_object(self):
+        return Profile.objects.get(user=self.request.user)
+
+    def dispatch(self, request, *args, **kwargs):
+        '''Call the profile1 add friend method.'''
+
+        profile1 = self.get_object()
+        profile2 = Profile.objects.get(pk=kwargs['other_pk'])
+        profile1.add_friend(profile2)
+
+        return redirect(reverse('profile_home'))

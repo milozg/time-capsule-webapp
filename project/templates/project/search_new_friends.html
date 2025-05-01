@@ -1,0 +1,19 @@
+<!-- project/templates/project/search_profiles.html
+    A form for users to search for other profiles.
+-->
+
+<table>
+<form action="{% url 'search_new_friends' %}">
+
+    <tr>
+        <th>First Name:</th>
+        <td><input type="text" name="first_name"></td>
+    </tr>
+    
+    <tr>
+        <td><input type="submit"></td>
+        <td></td>
+    </tr>
+    
+</form>
+</table>
