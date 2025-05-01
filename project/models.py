@@ -15,7 +15,7 @@ def at_job_helper(delivery_date, subject, email, message):
     # When the script will go through the directory and add any jobs there as at jobs then
     # remove them.
     job_id = timezone.now().strftime("%Y%m%d%H%M%S")
-    command = f'mailx -s \\"{subject}\\" \\"{email}\\" <<< \\"{message}\\"'
+    # command = f'mailx -s \\"{subject}\\" \\"{email}\\" <<< \\"{message}\\"'
 
     # For local:
     # with open(f'/Users/mish/Desktop/job_queue/{job_id}.sh', 'w') as f:
@@ -23,7 +23,8 @@ def at_job_helper(delivery_date, subject, email, message):
 
     # For Server
     with open(f'/home/ugrad/milozg/job_queue/{job_id}.sh', 'w') as f:
-        f.write(f'echo "{command}" | at {at_time}\n')
+        # f.write(f'echo "{command}" | at {at_time}\n')
+        f.write(f'echo -e "{message}" | mailx -s "{subject}" "{email}" | at {at_time}\n')
 
 # Create your models here.
 class Profile(models.Model):
