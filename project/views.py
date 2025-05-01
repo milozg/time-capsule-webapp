@@ -184,6 +184,9 @@ class CreateGroupView(MyLoginRequiredMixin, CreateView):
 
         profile = self.get_object()
 
+        form.instance.min_delivery = form.instance.min_delivery.astimezone(timezone.get_current_timezone())
+        form.instance.max_delivery = form.instance.max_delivery.astimezone(timezone.get_current_timezone())
+
         dt = random_datetime(form.instance.min_delivery, form.instance.max_delivery)
         dt = dt.astimezone(timezone.get_current_timezone())
         form.instance.delivery_date = dt
