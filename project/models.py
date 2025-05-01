@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.timezone import make_aware, get_current_timezone, is_naive
 
 def at_job_helper(delivery_date, subject, email, message):
     '''A helper function that will add an email at job given the required fields.'''
@@ -24,6 +25,12 @@ def at_job_helper(delivery_date, subject, email, message):
     # For Server
     with open(f'/home/ugrad/milozg/job_queue/{job_id}.sh', 'w') as f:
         f.write(f'echo "{command}" | at {at_time}\n')
+
+def ensure_aware(dt):
+    if is_naive(dt):
+        return make_aware(dt, timezone=get_current_timezone())
+    else:
+        return dt.astimezone(timezone.get_current_timezone())
 
 # Create your models here.
 class Profile(models.Model):
@@ -188,5 +195,7 @@ class GroupMessage(models.Model):
         '''
         subject = f'{self.profile.first_name}\'s message in {self.group.name} about {self.subject}'
 
+        dt = ensure_aware(self.group.delivery_date)
+
         for member in self.group.members.all():
-            at_job_helper(self.group.delivery_date, subject, member.email, self.message)
+            at_job_helper(dt, subject, member.email, self.message)

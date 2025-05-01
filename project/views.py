@@ -11,6 +11,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 import datetime, random
 from django.utils import timezone
+from django.utils.timezone import make_aware, get_current_timezone, is_naive
 
 def random_datetime(start, end):
     '''A function to return a random datetime between two input datetimes.'''
@@ -18,6 +19,12 @@ def random_datetime(start, end):
     end_ts = end.timestamp()
     random_ts = random.uniform(start_ts, end_ts)
     return datetime.datetime.fromtimestamp(random_ts)
+
+def ensure_aware(dt):
+    if is_naive(dt):
+        return make_aware(dt, timezone=get_current_timezone())
+    else:
+        return dt.astimezone(timezone.get_current_timezone())
 
 # Create your views here.
 
@@ -91,11 +98,13 @@ class CreatePersonalMessageView(MyLoginRequiredMixin, CreateView):
         profile = self.get_object()
         form.instance.profile = profile
 
-        form.instance.min_delivery = form.instance.min_delivery.astimezone(timezone.get_current_timezone())
-        form.instance.max_delivery = form.instance.max_delivery.astimezone(timezone.get_current_timezone())
+        # Ensure min/max are timezone-aware first
+        form.instance.min_delivery = ensure_aware(form.instance.min_delivery)
+        form.instance.max_delivery = ensure_aware(form.instance.max_delivery)
 
+        # Generate the delivery date
         dt = random_datetime(form.instance.min_delivery, form.instance.max_delivery)
-        dt = dt.astimezone(timezone.get_current_timezone())
+        dt = ensure_aware(dt)
         form.instance.delivery_date = dt
 
         pm = form.save()
@@ -184,11 +193,13 @@ class CreateGroupView(MyLoginRequiredMixin, CreateView):
 
         profile = self.get_object()
 
-        form.instance.min_delivery = form.instance.min_delivery.astimezone(timezone.get_current_timezone())
-        form.instance.max_delivery = form.instance.max_delivery.astimezone(timezone.get_current_timezone())
+        # Ensure min/max are timezone-aware first
+        form.instance.min_delivery = ensure_aware(form.instance.min_delivery)
+        form.instance.max_delivery = ensure_aware(form.instance.max_delivery)
 
+        # Generate the delivery date
         dt = random_datetime(form.instance.min_delivery, form.instance.max_delivery)
-        dt = dt.astimezone(timezone.get_current_timezone())
+        dt = ensure_aware(dt)
         form.instance.delivery_date = dt
 
         response = super().form_valid(form)
