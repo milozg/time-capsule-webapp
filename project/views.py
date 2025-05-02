@@ -1,7 +1,7 @@
 # project/views.py
 
 from django.shortcuts import render
-from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView,View
+from django.views.generic import ListView,DetailView,CreateView,DeleteView,View
 from .models import *
 from .forms import *
 from django.shortcuts import redirect
@@ -21,6 +21,7 @@ def random_datetime(start, end):
     return datetime.datetime.fromtimestamp(random_ts)
 
 def ensure_aware(dt):
+    '''A function to ensure that a datetime is aware and in the correct timezone.'''
     if is_naive(dt):
         return make_aware(dt, timezone=get_current_timezone())
     else:
@@ -31,6 +32,8 @@ def ensure_aware(dt):
 def show_about(request):
     '''Show the about page'''
     context = {}
+
+    # Pass in the user profile if authenticated for profile picture
     if request.user.is_authenticated:
         context['profile'] = Profile.objects.get(user=request.user)
 

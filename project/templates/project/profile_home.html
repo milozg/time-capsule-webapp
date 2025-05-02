@@ -1,4 +1,6 @@
-<!-- project/templates/project/profile_home.html -->
+<!-- project/templates/project/profile_home.html 
+    Template to display a profile's 'time capsule'
+-->
 {% extends 'project/base.html' %}
 
 {% block content %}
@@ -10,7 +12,7 @@
             <h2>Personal Messages</h2>
             <a href="{% url 'create_pm' %}" class="btn">Create New Personal Message</a>
         </div>
-        <p><strong>Messages Still in Your Time Capsule:</strong></p>
+        <p>Messages Still in Your Time Capsule:</p>
         {% if profile.get_undelivered_pms %}
             <table>
                 <tr>
@@ -37,7 +39,7 @@
             <h2>Nothing here! Write a message to add to your Time Capsule Above!</h2>
         {% endif %}
         {% if profile.get_delivered_pms %}
-            <p><strong>Messages Already Sent From Your Time Capsule:</strong></p>
+            <p>Messages Already Sent From Your Time Capsule:</p>
             <table>
                 <tr>
                     <th>Subject</th>
@@ -68,7 +70,7 @@
             <h2>Your Groups</h2>
             <a href="{% url 'create_group' %}" class="btn">Create a new Group</a>
         </div>
-        <p><strong>Groups still open to messages:</strong></p>
+        <p>Groups still open to messages:</p>
         {% if profile.get_open_groups %}
             <table>
                 <tr>
@@ -94,7 +96,7 @@
             <h2>Nothing here! Create a new group above.</h2>
         {% endif %}
         {% if profile.get_closed_groups %}
-            <p><strong>Wait For The Surprise! Group Time Capsules that have been sealed:</strong></p>
+            <p>Wait For The Surprise! Group Time Capsules that have been sealed:</p>
             <table>
                 <tr>
                     <th>Name</th>

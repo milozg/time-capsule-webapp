@@ -27,6 +27,7 @@ def at_job_helper(delivery_date, subject, email, message):
         f.write(f'echo "{command}" | at {at_time}\n')
 
 def ensure_aware(dt):
+    '''A function to ensure that a datetime is aware and in the correct timezone.'''
     if is_naive(dt):
         return make_aware(dt, timezone=get_current_timezone())
     else:

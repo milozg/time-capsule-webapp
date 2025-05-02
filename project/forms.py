@@ -17,6 +17,7 @@ class CreatePersonalMessageForm(forms.ModelForm):
         '''Associate this form with a model from our database'''
         model = PersonalMessage
         fields = ['subject', 'message', 'min_delivery', 'max_delivery']
+        # Add widgets to give datetime inputs a calendar input
         widgets = {
             'min_delivery':forms.DateTimeInput(attrs={'type': 'datetime-local'}),
             'max_delivery':forms.DateTimeInput(attrs={'type': 'datetime-local'}),
@@ -28,6 +29,7 @@ class CreateGroupForm(forms.ModelForm):
         '''Associate this form with a model from our database'''
         model = Group
         fields = ['name', 'members', 'min_delivery', 'max_delivery']
+        # Add datetime widgets and also a checkbox for the members select
         widgets = {
             'min_delivery':forms.DateTimeInput(attrs={'type': 'datetime-local'}),
             'max_delivery':forms.DateTimeInput(attrs={'type': 'datetime-local'}),
