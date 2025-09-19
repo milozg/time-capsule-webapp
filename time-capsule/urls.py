@@ -1,5 +1,5 @@
 """
-URL configuration for cs412 project.
+URL configuration for time capsule project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.1/topics/http/urls/
@@ -21,13 +21,6 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('hw/', include('hw.urls')),
-    path('', include('quotes.urls')),
-    path('formdata/', include('formdata.urls')),
-    path('restaurant/', include('restaurant.urls')),
-    path('blog/', include('blog.urls')),
-    path('mini_fb/', include('mini_fb.urls')),
-    path('voter_analytics/', include('voter_analytics.urls')),
     path('project/', include('project.urls')),
 ]
 
