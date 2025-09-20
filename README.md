@@ -7,6 +7,7 @@ Time Capsule WebApp is a fun web application that allows users to write messages
 ## Youtube Demonstration
 
 - https://youtu.be/twkvc0JzkjY
+- [![IMAGE ALT TEXT HERE](https://img.youtu.be/vi/twkvc0JzkjY/0.jpg)](https://youtu.be/twkvc0JzkjY)
 
 ---
 
