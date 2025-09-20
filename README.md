@@ -4,6 +4,11 @@ A fun app to send a message, forget about it, and then hear from yourself or oth
 
 ---
 
+## Youtube Demonstration
+
+- https://youtu.be/twkvc0JzkjY
+
+---
 
 ## Features
 
@@ -19,12 +24,6 @@ A fun app to send a message, forget about it, and then hear from yourself or oth
 - **Backend / Web Framework**: Django
 - **Database**: SQLite
 - **Frontend / Static files**: HTML, CSS 
-
----
-
-## Youtube Demonstration
-
-- https://youtu.be/twkvc0JzkjY
 
 ---
 
