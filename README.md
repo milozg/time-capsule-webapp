@@ -38,13 +38,12 @@ If you wish, below are the typical steps to get this project running locally:
     2. Create a script called run_job_queue.zsh on your local machine and add to it the following:
        ```bash
        #!/bin/zsh
-
-      cd /Users/mish/Desktop/job_queue || exit
+       cd /Users/mish/Desktop/job_queue || exit
       
-      for job in *.sh(.N); do
-          bash "$job" && rm "$job"
-      done
-      ```
+       for job in *.sh(.N); do
+           bash "$job" && rm "$job"
+       done
+       ```
     3. Make the script exicutable:
        ```bash
        chmod +x /path/to/your/run_job_queue.zsh
