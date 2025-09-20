@@ -1,6 +1,6 @@
 # Time Capsule WebApp
 
-A fun app to send a message, forget about it, and then hear from yourself, or others in 5 years (or any user chosen time frame)!  
+A fun app to send a message, forget about it, and then hear from yourself or others in 5 years (or any user chosen time frame)!  
 
 ---
 
@@ -16,9 +16,9 @@ A fun app to send a message, forget about it, and then hear from yourself, or ot
 
 ## Tech Stack
 
-- **Backend / Web Framework**: Django (Python) :contentReference[oaicite:0]{index=0}  
-- **Database**: SQLite (development) :contentReference[oaicite:1]{index=1}  
-- **Frontend / Static files**: HTML, CSS, served via Django static files. :contentReference[oaicite:2]{index=2}  
+- **Backend / Web Framework**: Django
+- **Database**: SQLite
+- **Frontend / Static files**: HTML, CSS 
 
 ---
 
