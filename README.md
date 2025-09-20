@@ -39,7 +39,7 @@ If you wish, below are the typical steps to get this project running locally:
     2. Create a script called run_job_queue.zsh on your local machine and add to it the following:
        ```bash
        #!/bin/zsh
-       cd /Users/mish/Desktop/job_queue || exit
+       cd /path/to/your/job_queue || exit
       
        for job in *.sh(.N); do
            bash "$job" && rm "$job"
@@ -77,24 +77,12 @@ If you wish, below are the typical steps to get this project running locally:
         with open(f'/path/to/your/job_queue/{job_id}.sh', 'w') as f:
             f.write(f'echo "{command}" | at {at_time}\n')
        ```
-
-```bash
-# clone the repo
-git clone https://github.com/milozg/time-capsule-webapp.git
-cd time-capsule-webapp
-
-# create & activate virtual environment
-python3 -m venv venv
-source venv/bin/activate   # On Windows: venv\Scripts\activate
-
-# install dependencies
-pip install -r requirements.txt   # or use `pipenv install` if using pipfile
-
-# apply migrations
-python manage.py migrate
-
-# (Optional) create a superuser if needed
-python manage.py createsuperuser
-
-# run the development server
-python manage.py runserver
+- Now create a virtual environment
+  ```bash
+  pipenv shell
+  ```
+- And run the local server
+  ```
+  python manage.py runserver
+  ```
+- Go to http://127.0.0.1:8000/ and use the app!
