@@ -34,6 +34,7 @@ If you wish, below are the typical steps to get this project running locally:
 
 - Fork and clone the repository
 - This project was originally intended to run on a Boston University server so there are some modifications that must be made
+
     1. Create a directory on your local machine called job_queue
     2. Create a script called run_job_queue.zsh on your local machine and add to it the following:
        ```bash
