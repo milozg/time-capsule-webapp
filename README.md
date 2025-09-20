@@ -1,6 +1,6 @@
 # Time Capsule WebApp
 
-A fun app to send a message, forget about it, and then hear from yourself or others in 5 years (or any user chosen time frame)!  
+Time Capsule WebApp is a fun web application that allows users to write messages and schedule them to be delivered in the future, whether to themselves or others. Think of it as emailing your future self (or your friends!) and getting a surprise years later.  
 
 ---
 
